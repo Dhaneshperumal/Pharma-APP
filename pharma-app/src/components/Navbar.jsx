@@ -11,7 +11,7 @@ const Navbars = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
-  const categories = ['/productlist', '/productdetail', '/cart'];
+  const categories = ['/productlist', '/productdetail',  '/cart'];
 
   useEffect(() => {
     // Check authentication on each render

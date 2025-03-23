@@ -7,8 +7,17 @@ const Checkout = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    name: '', email: '', address: '', city: '', state: '', zip: '', 
-    paymentMethod: '', cardNumber: '', cardExpiry: '', cardCVC: '', upiId: '',
+    name: '',
+    email: '',
+    address: '',
+    city: '',
+    state: '',
+    zip: '',
+    paymentMethod: '',
+    cardNumber: '',
+    cardExpiry: '',
+    cardCVC: '',
+    upiId: '',
   });
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -16,9 +25,7 @@ const Checkout = () => {
   const [isSummaryComplete, setIsSummaryComplete] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  const [cartItems, setCartItems] = useState(
-    location.state?.cartItems || (location.state?.product ? [location.state.product] : [])
-  );
+  const [cartItems, setCartItems] = useState(location.state?.cartItems || []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,7 +48,7 @@ const Checkout = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent the default form submission behavior
     if (currentStep === 1) {
       setIsShippingComplete(true);
       setCurrentStep(2);
@@ -61,22 +68,26 @@ const Checkout = () => {
       // Show success modal
       setShowSuccessModal(true);
       // Reset form and cart after placing the order
-      setFormData({
-        name: '',
-        email: '',
-        address: '',
-        city: '',
-        state: '',
-        zip: '',
-        paymentMethod: '',
-        cardNumber: '',
-        cardExpiry: '',
-        cardCVC: '',
-        upiId: '',
-      });
-      setCartItems([]); // Clear cart items
-      setCurrentStep(1); // Reset to the first step
+      resetFormAndCart();
     }
+  };
+
+  const resetFormAndCart = () => {
+    setFormData({
+      name: '',
+      email: '',
+      address: '',
+      city: '',
+      state: '',
+      zip: '',
+      paymentMethod: '',
+      cardNumber: '',
+      cardExpiry: '',
+      cardCVC: '',
+      upiId: '',
+    });
+    setCartItems([]); // Clear cart items
+    setCurrentStep(1); // Reset to the first step
   };
 
   const handleCloseModal = () => {
@@ -183,7 +194,7 @@ const Checkout = () => {
                   <strong>Email:</strong> {formData.email} | 
                   <strong>Address:</strong> {formData.address}, {formData.city}, {formData.state}, {formData.zip}
                 </p>  
-                <Button href="#" onClick={() => setCurrentStep(1)}> Edit</Button> 
+                <Button onClick={() => setCurrentStep(1)}> Edit</Button> 
               </Card.Body>
             )}
           </Card>
@@ -205,7 +216,9 @@ const Checkout = () => {
                       <img src={`/images/${item.image}`} alt={item.name} style={{ width: '100px', height: '100px' }} />
                       <div className="flex-grow-1 mx-2">
                         <h6>{item.name}</h6>
-                        <p>Price: ₹{item.price.toFixed(2)} | Quantity: {item.quantity}</p>
+                        <ListGroup.Item key={item.id}>
+                             {item.name} x {item.quantity}: ₹{parseFloat(item.price).toFixed(2)}
+                        </ListGroup.Item>
                       </div>
                       <div>
                         <Button variant="outline-secondary" onClick={() => handleQuantityChange(item.id, -1)}>-</Button>
@@ -235,26 +248,22 @@ const Checkout = () => {
 
             {isShippingComplete && currentStep !== 2 && (
               <Card.Body>
-                {/* Calculate total quantity */}
                 <div>
                   <p>
                     <strong>Total Quantity:</strong> {cartItems.reduce((total, item) => total + item.quantity, 0)}
                   </p>
                 </div>
-                <Button href="#" onClick={() => setCurrentStep(2)}> Edit</Button> 
+                <Button onClick={() => setCurrentStep(2)}> Edit</Button> 
               </Card.Body>
             )}
           </Card>       
 
           {/* STEP 3: Payment Information Section */}
           <Card className="mb-3">
-            <Card.Header className={isPaymentComplete ? 'header-complete' : 'header-incomplete'}>
-              <div className="d-flex justify-content-between">
-                <h5>Payment Option</h5>
-                {isPaymentComplete && <span className="text-success">✔️</span>}
-              </div>
+            <Card.Header>
+              <h5>Payment Option</h5>
             </Card.Header>
-            { currentStep === 3 && (
+            {currentStep === 3 && (
               <Card.Body>
                 <Form.Group controlId="formPaymentMethod" required>
                   <Form.Label>Select Payment Method</Form.Label>
@@ -323,7 +332,7 @@ const Checkout = () => {
                     Place Order
                   </Button>
                 )}
-              </Card.Body>
+ </Card.Body>
             )}
           </Card>
         </Col>

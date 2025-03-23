@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./components/Auth/Login";
@@ -14,25 +14,37 @@ import ForgetPassword from "./components/Auth/ForgetPassword";
 import Navbars from "./components/Navbar";
 import Footer from "./components/Footer";
 import Search from './pages/Search'; // Adjust the path based on your project structure
+import Upload from './pages/Upload';
 
 function App() {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(() => {
+    // Initialize cartItems from local storage
+    const savedCart = localStorage.getItem('cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
 
-  const cart = (product) => {
+  const addToCart = (product, quantity) => {
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((item) => item.id === product.id);
       if (existingItem) {
+        // Increment quantity if product already exists
         return prevItems.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + product.quantity } : item
+          item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
         );
       }
-      return [...prevItems, { ...product, quantity: product.quantity }];
+      // Add new product with quantity
+      return [...prevItems, { ...product, quantity }];
     });
   };
 
   const removeFromCart = (id) => {
     setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
+
+  useEffect(() => {
+    // Update local storage whenever cartItems changes
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+  }, [cartItems]);
 
   return (
     <Router>
@@ -42,12 +54,13 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/productlist" element={<ProductList />} />
-        <Route path="/productdetail/:id" element={<ProductDetail cart={cart} />} />
+        <Route path="/productdetail/:id" element={<ProductDetail addToCart={addToCart} />} />
         <Route path="/search" element={<Search />} />
         <Route path="/cart" element={<Cart cartItems={cartItems} removeFromCart={removeFromCart} />} />
         <Route path="/checkout" element={<Checkout cartItems={cartItems} />} />
         <Route path="/orders" element={<OrderHistory />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/upload" element={<Upload />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
       </Routes>

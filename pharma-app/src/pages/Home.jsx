@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/home.css'; 
+import { BiPhoneCall } from "react-icons/bi";
+import { FaCloudUploadAlt } from "react-icons/fa";
 import { Button } from "react-bootstrap";
 
 const Home = () => {
@@ -133,8 +135,8 @@ const Home = () => {
 
       <h3 className="text-center mt-5">PLACE YOUR ORDER</h3>
       <div className="text-center mt-4 mb-5 place">
-        <Link className="me-4 mb-3" to={'/'}><Button>Call 09042062072 to place order</Button></Link>
-        <Link to={'/'}><Button>Upload your prescription</Button></Link>
+        <Link className="me-4 mb-3" to={'/'}><Button className="fw-bold"><BiPhoneCall className="me-1 fs-5"  />Call to place order</Button></Link>
+        <Link to={'/upload'}><Button className="fw-bold"><FaCloudUploadAlt  className="me-1 fs-5"/>Upload your prescription</Button></Link>
       </div>
 
       <div className="slider">
