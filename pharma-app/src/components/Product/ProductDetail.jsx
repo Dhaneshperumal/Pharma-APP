@@ -1,17 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import './Loader.css'; // Import CSS for the circular loader
 
 const ProductDetail = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [quantity, setQuantity] = useState(1); // Initialize quantity state
+  const [loadingPercentage, setLoadingPercentage] = useState(0); // Track loading progress
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
+        const interval = setInterval(() => {
+          setLoadingPercentage((prev) => {
+            if (prev >= 100) return 100;
+            return prev + 20; // Increment percentage by 20
+          });
+        }, 500); // Update every 500ms
+
         const response = await fetch(`https://api.fda.gov/drug/label.json?search=id:${id}`);
+        clearInterval(interval); // Clear interval once the product is fetched
         const data = await response.json();
         const productData = data.results[0];
 
@@ -50,7 +60,18 @@ const ProductDetail = () => {
     fetchProduct();
   }, [id]);
 
-  if (!product) return <p>Loading...</p>;
+if (!product) {
+  return (
+    <div className="loader-container">
+      <div className="circle-loader">
+        {/* <div className="circle" style={{ '--percentage': `${loadingPercentage}%` }}></div> */}
+      </div>
+      <div className="spinner"></div> {/* Spinner Element */}
+      {/* <p>Loading... {loadingPercentage}%</p> */}
+    </div>
+  );
+}
+
 
   const addToCart = () => {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
