@@ -15,6 +15,8 @@ import Navbars from "./components/Navbar";
 import Footer from "./components/Footer";
 import Search from './pages/Search'; // Adjust the path based on your project structure
 import Upload from './pages/Upload';
+import Search from './pages/Search'; 
+import ScrollToTop from './components/Product/ScrollToTop.jsx'; 
 
 function App() {
   const [cartItems, setCartItems] = useState(() => {
@@ -48,6 +50,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <Navbars />
       <Routes>
         <Route path="/" element={<Home />} />

@@ -7,6 +7,8 @@ const Search = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const searchQuery = new URLSearchParams(location.search).get("query");
+  const [pincode, setPincode] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {

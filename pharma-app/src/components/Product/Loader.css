@@ -1,0 +1,29 @@
+/* Loader Container */
+.loader-container {
+  display: flex;
+  flex-direction: column; /* Align items vertically */
+  justify-content: center; /* Center vertically */
+  align-items: center; /* Center horizontally */
+  height: 100vh; /* Full viewport height */
+  font-family: Arial, sans-serif; /* For loading text */
+}
+
+/* Spinner Styling */
+.spinner {
+  width: 40px; /* Spinner width */
+  height: 40px; /* Spinner height */
+  border: 6px solid #007bff; /* Light blue border */
+  border-top: 6px solid transparent; /* Transparent top for spinning effect */
+  border-radius: 50%; /* Circle shape */
+  animation: spin 1s linear infinite; /* Smooth continuous rotation */
+}
+
+/* Spinner Animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg); /* Start rotation */
+  }
+  to {
+    transform: rotate(360deg); /* Complete rotation */
+  }
+}
