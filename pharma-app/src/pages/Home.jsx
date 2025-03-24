@@ -413,39 +413,46 @@ const Home = () => {
       </div>
 
       <div className="slider">
-        <div className="slides">
-          <input type="radio" name="radio-btn" id="radio0" defaultChecked />
-          <input type="radio" name="radio-btn" id="radio1" />
-          <input type="radio" name="radio-btn" id="radio2" />
-          <input type="radio" name="radio-btn" id="radio3" />
+            <div className="slides">
+              <input type="radio" name="radio-btn" id="radio1" />
+              <input type="radio" name="radio-btn" id="radio2" />
+              <input type="radio" name="radio-btn" id="radio3" />
+              <input type="radio" name="radio-btn" id="radio4" />
 
-          {randomProducts.map((product, index) => (
-            <div className={`slide slide-${index}`} key={product.id}>
-              <img src={product.image} alt={product.name} />
+              <div className="slide first">
+                <img src="/src/assets/banner1.jpg" alt="1" />
+              </div>
+              <div className="slide second">
+                <img src="/src/assets/banner2.jpg" alt="2" />
+              </div>
+              <div className="slide third">
+                <img src="/src/assets/banner1.jpg" alt="3" />
+              </div>
+              <div className="slide four">
+                <img src="/src/assets/banner2.jpg" alt="4" />
+              </div>
+
+              <div className="navigation-auto">
+                <div className="auto-btn1"></div>
+                <div className="auto-btn2"></div>
+                <div className="auto-btn3"></div>
+                <div className="auto-btn4"></div>
+              </div>
             </div>
-          ))}
-
-          <div className="navigation-auto">
-            <div className="auto-btn1"></div>
-            <div className="auto-btn2"></div>
-            <div className="auto-btn3"></div>
-            <div className="auto-btn4"></div>
+            <div className="navigation-manual">
+              <label htmlFor="radio1" className="manual-btn"></label>
+              <label htmlFor="radio2" className="manual-btn"></label>
+              <label htmlFor="radio3" className="manual-btn"></label>
+              <label htmlFor="radio4" className="manual-btn"></label>
+            </div>
           </div>
-        </div>
-
-        <div className="navigation-manual">
-          {randomProducts.map((_, index) => (
-            <label key={index} htmlFor={`radio${index}`} className="manual-btn"></label>
-          ))}
-        </div>
-      </div>
 
       <div className="producthead">
         <h2>Our Featured Products</h2>
         <hr />
       </div>
 
-      <div className="products">
+      <div className="productss">
         {randomProducts.map((product) => (
           <div key={product.id} className="product">
             <img src={product.image} alt={product.name} />
@@ -468,7 +475,7 @@ const Home = () => {
           <h4>Limited Time Offer</h4>
           <h3>Special Edition</h3>
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-          <h4>Buy This Guns At 20% Discount, Use Code OFF20</h4>
+          <h4>Buy Featured Medicines At 20% Discount, Use Code OFF20</h4>
           <button>SHOP NOW</button>
         </div>
       </div>
@@ -476,47 +483,69 @@ const Home = () => {
 
       {/* Categories */}
       <div className="container mt-5">
-        <div className="d-flex">
-          <div className="sidebar me-2">
-            <h2>Shop by Category</h2>
-            <ul className="list-group mt-5">
-              {categories.map((category, index) => (
-                <li 
-                  key={index} 
-                  className={`list-group-item ${activeCategory === category ? 'active' : ''}`} 
-                  onClick={() => handleCategoryClick(category)}
-                  style={{ cursor: 'pointer', backgroundColor: activeCategory === category ? '#c3fad8' : 'white' }}
-                >
-                  {category}
-                </li>
-              ))}
-            </ul>
-          </div>
+  <div className="d-flex flex-column flex-md-row">
+    {/* Sidebar */}
+    <div className="sidebar me-2 mb-4 mb-md-0">
+      <h2>Shop by Category</h2>
+      <ul className="list-group mt-3">
+        {categories.map((category, index) => (
+          <li
+            key={index}
+            className={`list-group-item ${activeCategory === category ? 'active' : ''}`}
+            onClick={() => handleCategoryClick(category)}
+            style={{
+              cursor: 'pointer',
+              backgroundColor: activeCategory === category ? '#c3fad8' : 'white',
+            }}
+          >
+            {category}
+          </li>
+        ))}
+      </ul>
+    </div>
 
-          <div className="products">
-            <h2 className="mb-4 text-center">{activeCategory ? activeCategory : 'All Products'}</h2>
-            <div className="row">
-              {filteredProducts.slice(0, 6).map((product) => (
-                <div className="col-md-4  mb-4 " t key={product.id}>
-                  <div className="card mt-5">
-                  <img src={product.openfda && product.openfda.image_url ? product.openfda.image_url[0] : '/src/assets/logo.jpeg'} alt={'N/A'}  />
-                    <div className="card-body">
-                    <h5>{product.openfda && product.openfda.brand_name ? product.openfda.brand_name[0] : 'N/A'}</h5>
-                      <p className="card-text">
-                        Price: ₹{Math.random() * 100}<br />
-                        {product.indications_and_usage ? product.indications_and_usage.join(' ').split(' ').slice(0, 5).join(' ') + '...' : 'N/A'}
-                      </p>
-                      <Link to={`/productdetail/${product.id}`} className="catbtn ">
-                        <button>View Details</button>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              ))}
+    {/* Products */}
+    <div className="products flex-fill">
+      <h2 className="mb-4 text-center">{activeCategory || 'All Products'}</h2>
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+        {filteredProducts.slice(0, 6).map((product) => (
+          <div className="col" key={product.id}>
+            <div className="card h-100">
+              <img
+                src={
+                  product.openfda && product.openfda.image_url
+                    ? product.openfda.image_url[0]
+                    : '/src/assets/logo.jpeg'
+                }
+                alt="N/A"
+                className="card-img-top"
+                style={{ objectFit: 'cover', height: '200px' }}
+              />
+              <div className="card-body d-flex flex-column justify-content-between">
+                <h5 className="card-title">
+                  {product.openfda && product.openfda.brand_name
+                    ? product.openfda.brand_name[0]
+                    : 'N/A'}
+                </h5>
+                <p className="card-text">
+                  Price: ₹{Math.random() * 100}
+                  <br />
+                  {product.indications_and_usage
+                    ? product.indications_and_usage.join(' ').split(' ').slice(0, 5).join(' ') + '...'
+                    : 'N/A'}
+                </p>
+                <Link to={`/productdetail/${product.id}`} className="catbtn">
+                  <button className="btn btn-primary w-100">View Details</button>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
+        ))}
       </div>
+    </div>
+  </div>
+</div>
+
 
 {/* Popular Items */}
       <div className="producthead">

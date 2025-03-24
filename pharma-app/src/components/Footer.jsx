@@ -43,7 +43,7 @@ const Footer = () => {
             <p>Claim your complimentary health and fitness tips subscription and stay updated on our newest promotions.</p>
             <input type="email" placeholder="Enter your email ID" className="subscribe-input" />
             <button className="btn btn-primary">Subscribe</button>
-            <h5>Registered Office Address</h5>
+            {/* <h5>Registered Office Address</h5>
             <p>
               Intellihealth Solutions Private Limited<br />
               Office Unit no. 1, 2, 5, & 7, 6th floor Urmi Corporate Park Solaris,<br />
@@ -56,14 +56,14 @@ const Footer = () => {
             <p>
               Name: Chandrasekhar Swaminathan<br />
               Email: <a href="mailto:grievance-officer@truemeds.in">grievance-officer@truemeds.in</a>
-            </p>
+            </p> */}
           </div>
         </div>
 
         <div className="row">
           <div className="col text-center">
-            <h5>Download Truemeds</h5>
-            <p>Manage your health with ease. Download Truemeds today!</p>
+            <h5>Download MediMart</h5>
+            <p>Manage your health with ease. Download MediMart today!</p>
             <p>Get easy access to medicine refills, health information, and more. With our app, you'll never have to wait in line again. Download now and start taking control of your health.</p>
             <button className="btn btn-secondary">Download Now</button>
           </div>
@@ -72,14 +72,14 @@ const Footer = () => {
         <div className="row">
           <div className="col text-center">
             <p>Our customer representative team is available 7 days a week from 8:30 am - 9:30 pm.</p>
-            <p>Email: <a href="mailto:support@truemeds.in">support@truemeds.in</a> | Phone: 09240250346</p>
+            <p>Email: <a href="mailto:support@medimart.in">support@medimart.in</a> | Phone: 09042062072</p>
           </div>
         </div>
 
         <div className="row">
           <div className="col text-center">
             <p>v3.6.8</p>
-            <p>© 2025 - Truemeds | All rights reserved</p>
+            <p>© 2025 - MediMart | All rights reserved</p>
           </div>
         </div>
 

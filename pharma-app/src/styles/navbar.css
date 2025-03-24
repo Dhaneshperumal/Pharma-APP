@@ -91,7 +91,7 @@
   .mobile-search-container {
     width: 100%;
     padding: 10px;
-    background: rgb(84, 75, 75);
+    background-color: #c3fad8;
     position: absolute;
     top: 56px; /* Adjust based on navbar height */
     left: 0;

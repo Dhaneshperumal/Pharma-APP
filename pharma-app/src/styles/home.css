@@ -193,7 +193,7 @@ body {
     border-radius: 5px; 
 }
 
-.products {
+.productss {
     display: flex;
     flex-wrap: wrap; 
     justify-content: center; 
@@ -403,8 +403,9 @@ body {
   }
   
   .scroll-item {
-    min-width: 300px;
+    min-width: 320px;
     margin-right: 15px;
+    height: 500px;
     background: #f9f9f9;
     padding: 15px;
     border-radius: 5px;
@@ -550,15 +551,15 @@ body {
   
   /* cat */
 
-  /* Offer Section Layout */
-.offer-section {
+  .offer-section {
     display: flex;
     align-items: center; /* Aligns items vertically */
-    justify-content: flex-start; /* Aligns the content to the left */
-    gap: 20px;
-    position: relative; /* Ensure child positioning works correctly */
+    justify-content: center; /* Center the content */
     padding: 20px;
-  }
+    background-color: #e9ecef; /* Light background for the offer section */
+    border-radius: 10px; /* Rounded corners */
+    margin: 20px 0; /* Space above and below */
+}
   
   /* Blur Effect for Content Box */
   .content-box {

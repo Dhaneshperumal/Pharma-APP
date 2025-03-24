@@ -368,7 +368,7 @@ const Checkout = () => {
         </Modal.Header>
         <Modal.Body>
           <div className="text-center">
-            <img src='/images/ordered.gif' alt="Order Placed" style={{ width: '300px', height: '300px' }} />
+            <img src='/src/assets/ordered.gif' alt="Order Placed" style={{ width: '300px', height: '300px' }} />
             <p>Your order has been placed successfully.</p>
             <p>Thank you for shopping with us!</p>
           </div>

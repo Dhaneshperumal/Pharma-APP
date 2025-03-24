@@ -10,7 +10,7 @@ const Navbars = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchInHeader, setShowSearchInHeader] = useState(false);
-  const [cartItems, setCartItems] = useState(3); // Replace with dynamic data if needed
+  const [cartItems, setCartItems] = useState(3);
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
   const categories = ['/productlist', '/productdetail', '/cart'];
   
@@ -148,6 +148,8 @@ const Navbars = () => {
           </div>
         </Container>
       </Navbar>
+
+      <hr className="hr" />
 
 {/* shittyy */}
 
