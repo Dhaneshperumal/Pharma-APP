@@ -19,6 +19,7 @@ const Home = () => {
   const [pincode, setPincode] = useState('');
   const [location, setLocation] = useState('');
   const [popupVisible, setPopupVisible] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -78,7 +79,7 @@ const Home = () => {
           name: product.openfda.brand_name ? product.openfda.brand_name[0] : 'N/A',
           description: product.indications_and_usage ? product.indications_and_usage.join(' ').split(' ').slice(0, 5).join(' ') + '...' : 'N/A',
           image: product.openfda.image_url ? product.openfda.image_url[0] : '/src/assets/logo.jpeg', // Fallback image
-          price: Math.random() * 100, // Placeholder for price
+          price: (Math.random() * 100).toFixed(2), // Placeholder for price
           stock: Math.floor(Math.random() * 100), // Placeholder for stock limit
           ingredients: product.openfda.active_ingredient ? product.openfda.active_ingredient.slice(0, 5).join(', ') : 'N/A'
         }));
@@ -89,6 +90,25 @@ const Home = () => {
         console.error('Error fetching search results:', error);
       }
     }
+  };
+
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (query) {
+      const filteredSuggestions = products
+        .filter(product => product.openfda.brand_name && product.openfda.brand_name[0].toLowerCase().includes(query.toLowerCase()))
+        .map(product => product.openfda.brand_name[0]);
+      setSuggestions(filteredSuggestions);
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setSearchQuery(suggestion);
+    setSuggestions([]); // Clear suggestions after selection
   };
 
   useEffect(() => {
@@ -267,144 +287,148 @@ const Home = () => {
   return (
     <>
   <>
-    <div
-      className="search mt-5 text-center p-5"
-      style={{backgroundImage: `url('/src/assets/logo.jpeg')`,backgroundSize: 'cover',backgroundPosition: 'center',color: 'white',borderRadius: '10px',
-      }}
-    >
-      <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'black' }}>
-        Say Goodbye to High Medicine Prices
-      </h2>
-      <p style={{ fontSize: '1.2rem', marginBottom: '20px', color: 'black' }}>
-        Compare Prices and Save up to 15%
-      </p>
-      <form onSubmit={handleSearchSubmit} className="d-flex justify-content-center align-items-center">
-        {/* Deliver To Dropdown */}
-        <div className="dropdown me-2" style={{ position: 'relative' }}>
-          <button
-            className="btn btn-light"
-            type="button"
-            onClick={() => setPopupVisible(!popupVisible)}
-            style={{
-              padding: '10px',
-              border: '1px solid #ccc',
-              borderRadius: '15px',
-              cursor: 'pointer',
-              backgroundColor: '#f8f9fa',
-            }}
-          >
-            Deliver to
-          </button>
-          
-          {popupVisible && (
-            <div
-              className="popup-container"
+  <div
+        className="search mt-5 text-center p-5"
+        style={{backgroundImage: `url('/src/assets/logo.jpeg')`, backgroundSize: 'cover', backgroundPosition: 'center', color: 'white', borderRadius: '10px'}}
+      >
+        <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'black' }}>
+          Say Goodbye to High Medicine Prices
+        </h2>
+        <p style={{ fontSize: '1.2rem', marginBottom: '20px', color: 'black' }}>
+          Compare Prices and Save up to 15%
+        </p>
+        <form onSubmit={handleSearchSubmit} className="d-flex justify-content-center align-items-center">
+          <div className="dropdown me-2" style={{ position: 'relative' }}>
+            <button
+              className="btn btn-light"
+              type="button"
+              onClick={() => setPopupVisible(!popupVisible)}
               style={{
-                position: 'absolute',
-                top: '50px',
-                left: '0',
-                right: '0',
-                margin: 'auto',
-                backgroundColor: "white",
-                padding: '15px',
+                padding: '10px',
                 border: '1px solid #ccc',
                 borderRadius: '15px',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                width: '300px',
-                zIndex: 10,
+                cursor: 'pointer',
+                backgroundColor: '#f8f9fa',
               }}
             >
-              <h4 style={{ fontSize: '1rem', marginBottom: '10px' }}>Select Delivery Location</h4>
-              <input
-                type="text"
-                placeholder="Enter PIN Code"
-                value={pincode}
-                onChange={(e) => setPincode(e.target.value)}
-                className="form-control mb-3"
+              Deliver to
+            </button>
+            {popupVisible && (
+              <div
+                className="popup-container"
                 style={{
-                  width: '100%',
-                  padding: '10px',
+                  position: 'absolute',
+                  top: '50px',
+                  left: '0',
+                  right: '0',
+                  margin: 'auto',
+                  backgroundColor: "white",
+                  padding: '15px',
                   border: '1px solid #ccc',
                   borderRadius: '15px',
-                }}
-              />
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePincodeSubmit();
-                }}
-                className="btn btn-primary mb-2"
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  borderRadius: '15px',
-                  backgroundColor: '#007bff',
-                  color: 'white',
-                  border: 'none',
-                  cursor: 'pointer',
+                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                  width: '300px',
+                  zIndex: 10,
                 }}
               >
-                Submit PIN Code
-              </button>
+                <h4 style={{ fontSize: '1rem', marginBottom: '10px' }}>Select Delivery Location</h4>
+                <input
+                  type="text"
+                  placeholder="Enter PIN Code"
+                  value={pincode}
+                  onChange={(e) => setPincode(e.target.value)}
+                  className="form-control mb-3"
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ccc',
+                    borderRadius: '15px',
+                  }}
+                />
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handlePincodeSubmit();
+                  }}
+                  className="btn btn-primary mb-2"
+                  style={{
+                    width: '90%',
+                    padding: '10px',
+                    borderRadius: '15px',
+                    backgroundColor: '#007bff',
+                    color: 'white',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Submit PIN Code
+                </button>
 
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleCurrentLocation();
-                }}
-                className="btn btn-secondary"
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  borderRadius: '15px',
-                  backgroundColor: '#6c757d',
-                  color: 'white',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
-              >
-                Use Current Location
-              </button>
-            </div>
-          )}
-        </div>
-        
-        {/* Search Input */}
-        <input
-          type="search"
-          placeholder="Search for products"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          style={{
-            padding: '10px',
-            width: '300px',
-            borderRadius: '15px',
-            border: '1px solid #ccc',
-            marginRight: '10px',
-          }}
-        />
-        {/* Search Button */}
-        <button
-          type="submit"
-          style={{
-            padding: '10px 20px',
-            border: 'none',
-            borderRadius: '15px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            fontSize: '1rem',
-            cursor: 'pointer',
-          }}
-        >
-          Search
-        </button>
-      </form>
-      {location && (
-        <p style={{ fontSize: '1rem', marginTop: '15px', color: '#333' }}>
-          Current Location: <strong>{location}</strong>
-        </p>
-      )}
-    </div>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleCurrentLocation();
+                  }}
+                  className="btn text-center btn-secondary"
+                  style={{
+                    width: '90%',
+                    padding: '10px',
+                    borderRadius: '15px',
+                    backgroundColor: '#6c757d',
+                    color: 'white',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Use Current Location
+                </button>
+              </div>
+            )}
+          </div>
+          
+          <input
+            type="search"
+            placeholder="Search for products"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            style={{
+              padding: '10px',
+              width: '300px',
+              borderRadius: '15px',
+              border: '1px solid #ccc',
+              marginRight: '10px',
+            }}
+          />
+          <button
+            type="submit"
+            style={{
+              padding: '10px 20px',
+              border: 'none',
+              borderRadius: '15px',
+              backgroundColor: '#007bff',
+              color: 'white',
+              fontSize: '1rem',
+              cursor: 'pointer',
+            }}
+          >
+            Search
+          </button>
+        </form>
+        {suggestions.length > 0 && (
+          <div className="suggestions-dropdown" style={{ position: 'absolute', top:'53%', left:'40%', zIndex: 1000, backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '5px',color:'black', width: '300px', marginTop: '5px' }}>
+            {suggestions.map((suggestion, index) => (
+              <div key={index} className="suggestion-item" onClick={() => handleSuggestionClick(suggestion)} style={{ padding: '10px', cursor: 'pointer' }}>
+                {suggestion}
+              </div>
+            ))}
+          </div>
+        )}
+        {location && (
+          <p className="" style={{ fontSize: '1rem', marginTop: '15px', color: '#333' }}>
+            Current Location: <strong>{location}</strong>
+          </p>
+        )}
+      </div>
   </>
       <h3 className="text-center mt-5">PLACE YOUR ORDER</h3>
       <div className="text-center mt-4 mb-5 place">
@@ -469,14 +493,14 @@ const Home = () => {
       </div>
 
       {/* Offer Section */}
-      <div className="offer-section">
+      <div className="offer-section row">
         <div className="content-box"></div>
-        <div className="content">
+        <div className="content col-sm-1">
           <h4>Limited Time Offer</h4>
-          <h3>Special Edition</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-          <h4>Buy Featured Medicines At 20% Discount, Use Code OFF20</h4>
-          <button>SHOP NOW</button>
+          <h3>Grab It Before It Sold</h3>
+          <p className="text-dark">Manage your health with ease....</p>
+          <h4>Buy MediMart Medicines At 20% Discount, Use Code OFF20</h4>
+          <Link to={'/productlist'}><button >SHOP NOW</button></Link>
         </div>
       </div>
 
@@ -507,7 +531,7 @@ const Home = () => {
     {/* Products */}
     <div className="products flex-fill">
       <h2 className="mb-4 text-center">{activeCategory || 'All Products'}</h2>
-      <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+      <div className="row row-cols-1 row-cols-sm-1 row-cols-lg-3 row-cols-md-2  g-4">
         {filteredProducts.slice(0, 6).map((product) => (
           <div className="col" key={product.id}>
             <div className="card h-100">
