@@ -528,7 +528,7 @@ const Home = () => {
                     : 'N/A'}
                 </h5>
                 <p className="card-text">
-                  Price: ₹{Math.random() * 100}
+                Price: ₹{(Math.random() * 100).toFixed(2)}<br/>
                   <br />
                   {product.indications_and_usage
                     ? product.indications_and_usage.join(' ').split(' ').slice(0, 5).join(' ') + '...'

@@ -10,7 +10,7 @@ const Navbars = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchInHeader, setShowSearchInHeader] = useState(false);
-  const [cartItems, setCartItems] = useState(3);
+  const [cartItems, setCartItems] = useState();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
   const categories = ['/productlist', '/productdetail', '/cart'];
   
@@ -46,7 +46,7 @@ const Navbars = () => {
     setIsAuthenticated(false);
     navigate('/');
   };
-
+  
   return (
     <>
       {/* Sticky Header Search Bar */}
@@ -163,11 +163,6 @@ const Navbars = () => {
       <Nav.Item>
         <Nav.Link as={Link} to="/productlist" className={location.pathname === '/productlist' ? 'active' : ''}>
           ProductList
-        </Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link as={Link} to="/productdetail" className={location.pathname === '/productdetail' ? 'active' : ''}>
-          ProductDetail
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>

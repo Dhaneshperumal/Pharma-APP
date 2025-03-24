@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Form, Button, Container, Row, Col, ListGroup, Modal } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
+import './Checkout.css';
 
 const Checkout = () => {
   const location = useLocation();
