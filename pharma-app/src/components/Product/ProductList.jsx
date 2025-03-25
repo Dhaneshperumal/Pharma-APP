@@ -18,7 +18,7 @@ const ProductList = () => {
             if (prev >= 100) return 100;
             return prev + 20; // Increment by 20%
           });
-        }, 500); // Update every 500ms
+        }, 500); 
 
         const response = await fetch('https://api.fda.gov/drug/label.json?search=*&limit=250');
         clearInterval(interval); // Stop the loader once the data is fetched
@@ -62,7 +62,7 @@ const ProductList = () => {
 
   return (
     <Container className="mt-5">
-      <h2 className="text-center mb-4">Product Catalog</h2>
+      <h1 className="text-center mb-4">Product Catalog</h1>
       {categories.map(category => (
         <div key={category}>
           <h3 className="mt-4">{category}</h3>

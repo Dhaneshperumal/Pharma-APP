@@ -3,9 +3,9 @@ import '../styles/footer.css'; // Import your CSS file for custom styles
 
 const Footer = () => {
   return (
-    <footer className="footer pt-5">
+    <footer className="footer  pt-5">
       <div className="container">
-        <div className="row text-center">
+        <div className="row ">
           {/* Column 1 */}
           <div className="col-md-3">
             <h5>Company</h5>
@@ -61,30 +61,30 @@ const Footer = () => {
         </div>
 
         <div className="row">
-          <div className="col text-center">
+          <div className="col ">
             <h5>Download MediMart</h5>
             <p>Manage your health with ease. Download MediMart today!</p>
             <p>Get easy access to medicine refills, health information, and more. With our app, you'll never have to wait in line again. Download now and start taking control of your health.</p>
-            <button className="btn btn-secondary">Download Now</button>
+            <button className="btn p-2 btn-secondary">Download Now</button>
           </div>
         </div>
 
         <div className="row">
-          <div className="col text-center">
+          <div className="col ">
             <p>Our customer representative team is available 7 days a week from 8:30 am - 9:30 pm.</p>
             <p>Email: <a href="mailto:support@medimart.in">support@medimart.in</a> | Phone: 09042062072</p>
           </div>
         </div>
 
         <div className="row">
-          <div className="col text-center">
+          <div className="col ">
             <p>v3.6.8</p>
             <p>© 2025 - MediMart | All rights reserved</p>
           </div>
         </div>
 
         <div className="row">
-          <div className="col text-center">
+          <div className="col ">
             <h5>Our Payment Partners</h5>
             {/* Replace with actual payment partner logos */}
             <div className="payment-partners">

@@ -1,25 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Loader.css';
+import './Loader.css'; // Ensure you have styles for the loader
 
 const ProductDetail = ({ addToCart }) => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [quantity, setQuantity] = useState(1);
-  const [loadingPercentage, setLoadingPercentage] = useState(0);
+  const [loading, setLoading] = useState(true); // Loading state
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const interval = setInterval(() => {
-          setLoadingPercentage((prev) => (prev >= 100 ? 100 : prev + 20));
-        }, 500);
-
         const response = await fetch(`https://api.fda.gov/drug/label.json?search=id:${id}`);
-        clearInterval(interval);
         const data = await response.json();
         const productData = data.results[0];
 
@@ -44,6 +39,8 @@ const ProductDetail = ({ addToCart }) => {
         }
       } catch (error) {
         console.error('Error fetching product details:', error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching
       }
     };
 
@@ -55,11 +52,18 @@ const ProductDetail = ({ addToCart }) => {
     navigate('/cart');
   };
 
-  if (!product) return <div className="text-center my-5">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="loader-container">
+        <div className="spinner"></div> {/* Spinner element */}
+        <p>Loading product details...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mt-5">
-      <h2 className='text-center mb-3 fw-bold'>Product Details</h2>
+      <h1 className='text-center mb-3 fw-bold'>Product Details</h1>
       <div className="row">
         <div className="col-md-6 text-center">
           <img src={product.image} alt={product.name} className="img-fluid mb-3" />
@@ -89,7 +93,7 @@ const ProductDetail = ({ addToCart }) => {
       <ul className="list-group">
         {relatedProducts.map((related) => (
           <li className="list-group-item" key={related.id}>
-            <Link to={`/productdetail/${related.id}`}>{related.openfda.brand_name[0]}</Link>
+            <Link to={`/productdetail/${related.id}`}>{related.openfda.brand_name[0 ]}</Link>
           </li>
         ))}
       </ul>

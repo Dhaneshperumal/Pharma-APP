@@ -175,27 +175,24 @@ const Navbars = () => {
       <hr className="hr" />
 
       <Nav className="justify-content-center navbar navitem d-none d-lg-flex">
-        <Nav.Item>
-          <Nav.Link as={Link} to="/" className={location.pathname === '/' ? 'active' : ''}>
-            Home
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link as={Link} to="/productlist" className={location.pathname === '/productlist' ? 'active' : ''}>
-            ProductList
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link as={Link} to="/productdetail" className={location.pathname === '/productdetail' ? 'active' : ''}>
-            ProductDetail
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link as={Link} to="/cart" className={location.pathname === '/cart' ? 'active' : ''}>
-            Cart
-          </Nav.Link>
-        </Nav.Item>
-      </Nav>
+        
+      <Nav.Item>
+        <Nav.Link as={Link} to="/" className={location.pathname === '/' ? 'active' : ''}>
+          Home
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link as={Link} to="/productlist" className={location.pathname === '/productlist' ? 'active' : ''}>
+          ProductList
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link as={Link} to="/cart" className={location.pathname === '/cart' ? 'active' : ''}>
+          Cart
+        </Nav.Link>
+      </Nav.Item>
+    </Nav>
+
 
       <Offcanvas show={showMenu} onHide={() => setShowMenu(false)} placement="end" style={{ backgroundColor: '#222', color: 'white' }}>
         <Offcanvas.Header closeButton>
