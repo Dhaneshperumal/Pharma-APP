@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navbar, Container, Nav, Form, Button, Offcanvas, Badge } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import SearchBar from '../pages/SearchBar'; // Import the SearchBar component
 import '../styles/navbar.css';
 
 const Navbars = () => {
@@ -10,14 +11,18 @@ const Navbars = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchInHeader, setShowSearchInHeader] = useState(false);
-  const [cartItems, setCartItems] = useState();
+  const [cartItems, setCartItems] = useState(0); // Initialize cartItems
+  const [suggestions, setSuggestions] = useState([]);
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
   const categories = ['/productlist', '/productdetail', '/cart'];
-  
 
   useEffect(() => {
     // Check authentication on each render
     setIsAuthenticated(localStorage.getItem('isLoggedIn') === 'true');
+
+    // Load cart items from local storage
+    const storedCartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    setCartItems(storedCartItems.length); // Set the number of items in the cart
 
     // Add scroll listener to toggle search bar visibility
     const handleScroll = () => {
@@ -46,7 +51,28 @@ const Navbars = () => {
     setIsAuthenticated(false);
     navigate('/');
   };
-  
+
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    // Fetch suggestions based on the query
+    if (query) {
+      // Replace this with your actual API call or logic to get suggestions
+      const fetchedSuggestions = ['Ibuprofen', 'Paracetamol', 'Aspirin', 'Amoxicillin', 'Ciprofloxacin'].filter(item =>
+        item.toLowerCase().includes(query.toLowerCase())
+      );
+      setSuggestions(fetchedSuggestions);
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setSearchQuery(suggestion);
+    setSuggestions([]); // Clear suggestions after selection
+  };
+
   return (
     <>
       {/* Sticky Header Search Bar */}
@@ -66,7 +92,6 @@ const Navbars = () => {
             transition: 'all 0.3s ease-in-out',
           }}
         >
-          
           <Container className="d-flex justify-content-between align-items-center">
             <Navbar.Brand as={Link} to="/" style={{ fontWeight: 'bold', fontSize: '25px', color: 'black' }}>
               MediMart
@@ -78,7 +103,7 @@ const Navbars = () => {
                 className="me-2"
                 aria-label="Search"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
                 style={{
                   padding: '10px',
                   width: '300px',
@@ -94,27 +119,24 @@ const Navbars = () => {
               🛒 <Badge bg="secondary">{cartItems}</Badge>
             </Link>
           </Container>
+          {suggestions.length > 0 && (
+            <div className="suggestions-dropdown" style={{ position: 'absolute', zIndex: 1000, backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '5px', width: '300px', marginTop: '5px' }}>
+              {suggestions.map((suggestion, index) => (
+                <div key={index} className="suggestion-item" onClick={() => handleSuggestionClick(suggestion)} style={{ padding: '10px', cursor: 'pointer' }}>
+                  {suggestion}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
-
-      
 
       {/* Main Navbar */}
       <Navbar expand="lg" className="navbar navhead d-none d-lg-flex">
         <Container>
           <Navbar.Brand className="navhome text-dark fs-4" as={Link} to="/">MediMart</Navbar.Brand>
           {categories.includes(location.pathname) && (
-            <Form className="d-flex navb ms-auto" onSubmit={handleSearchSubmit}>
-              <Form.Control
-                type="search"
-                placeholder="Search"
-                className="me-2"
-                aria-label="Search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <Button variant="outline-dark me-3" type="submit">Search</Button>
-            </Form>
+            <SearchBar onSearch={handleSearchSubmit} /> 
           )}
           <Form className="d-flex">
             {!isAuthenticated ? (
@@ -137,6 +159,7 @@ const Navbars = () => {
         </Container>
       </Navbar>
 
+      {/* Mobile Navbar */}
       <Navbar expand="lg" className="navbar navhead d-lg-none" style={{ backgroundColor: '#222', color: 'white' }}>
         <Container>
           <Navbar.Brand className="text-white" as={Link} to="/">MediMart</Navbar.Brand>
@@ -151,27 +174,28 @@ const Navbars = () => {
 
       <hr className="hr" />
 
-{/* shittyy */}
-
       <Nav className="justify-content-center navbar navitem d-none d-lg-flex">
-        
-      <Nav.Item>
-        <Nav.Link as={Link} to="/" className={location.pathname === '/' ? 'active' : ''}>
-          Home
-        </Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link as={Link} to="/productlist" className={location.pathname === '/productlist' ? 'active' : ''}>
-          ProductList
-        </Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link as={Link} to="/cart" className={location.pathname === '/cart' ? 'active' : ''}>
-          Cart
-        </Nav.Link>
-      </Nav.Item>
-    </Nav>
-
+        <Nav.Item>
+          <Nav.Link as={Link} to="/" className={location.pathname === '/' ? 'active' : ''}>
+            Home
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link as={Link} to="/productlist" className={location.pathname === '/productlist' ? 'active' : ''}>
+            ProductList
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link as={Link} to="/productdetail" className={location.pathname === '/productdetail' ? 'active' : ''}>
+            ProductDetail
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link as={Link} to="/cart" className={location.pathname === '/cart' ? 'active' : ''}>
+            Cart
+          </Nav.Link>
+        </Nav.Item>
+      </Nav>
 
       <Offcanvas show={showMenu} onHide={() => setShowMenu(false)} placement="end" style={{ backgroundColor: '#222', color: 'white' }}>
         <Offcanvas.Header closeButton>

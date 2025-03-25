@@ -64,7 +64,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/forget-password" element={<ForgetPassword />} />
+        <Route path="/forget" element={<ForgetPassword />} />
       </Routes>
       <Footer />
     </Router>

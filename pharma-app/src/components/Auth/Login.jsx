@@ -114,6 +114,11 @@ const Login = () => {
             Don't have an account? Sign up
           </Link>
         </Grid>
+        <Grid container justifyContent='center' style={{ marginTop: '10px' }}>
+        <Link to='/forget' style={{ textDecoration: 'none', color: '#3f51b5' }}>
+            Forget password ?
+          </Link>
+          </Grid>
       </Paper>
     </Container>
   );

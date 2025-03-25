@@ -405,7 +405,7 @@ body {
   .scroll-item {
     min-width: 320px;
     margin-right: 15px;
-    height: 500px;
+    height: 550px;
     background: #f9f9f9;
     padding: 15px;
     border-radius: 5px;
@@ -556,10 +556,16 @@ body {
     align-items: center; /* Aligns items vertically */
     justify-content: center; /* Center the content */
     padding: 20px;
-    background-color: #e9ecef; /* Light background for the offer section */
+    background-color: #f8fff5; /* Light background for the offer section */
     border-radius: 10px; /* Rounded corners */
     margin: 20px 0; /* Space above and below */
 }
+@media (max-width: 768px) {
+    .popular {
+      max-width: 400px; /* Adjust minimum width for mobile */
+    }
+  }
+
   
   /* Blur Effect for Content Box */
   .content-box {
@@ -585,4 +591,3 @@ body {
     color: white;
     text-align: center;
   }
-  

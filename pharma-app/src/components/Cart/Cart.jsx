@@ -31,7 +31,7 @@ const Cart = ({ cartItems, removeFromCart }) => {
       {cartItems.length > 0 && (
         <div className="mt-3">
           <h4>Total Amount: ₹{totalAmount.toFixed(2)}</h4>
-          <Button variant="success" onClick={() => navigate('/checkout', { state: { cartItems } })}>Proceed to Checkout</Button>
+          <Button className='mb-md-4 mt-md-3'   variant="success" onClick={() => navigate('/checkout', { state: { cartItems } })}>Proceed to Checkout</Button>
         </div>
       )}
     </Container>

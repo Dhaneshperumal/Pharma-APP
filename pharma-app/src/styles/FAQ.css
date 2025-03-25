@@ -1,0 +1,73 @@
+@import url(https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@400&display=swap);
+@import url(https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css);
+
+.accordion {
+    display: flex;
+    gap: 20px;
+    width: 80%; /* Adjusted to make it wider */
+    max-width: 800px; /* Increased maximum width for larger screens */
+    padding: 15px;
+    list-style: none;
+    margin: 100px auto; /* Centers the accordion on the page */
+    border-radius: 10px;
+    height: max-content;
+    flex-direction: column;
+    background-color: #121212; /* Optional: Adds a background to the container */
+  }
+  
+  .details {
+    border-radius: 15px;
+    padding: 10px 15px;
+    border: 1px solid #121726f7;
+    background: linear-gradient(291deg, black, #070c13, black);
+    transition: border-color 0.3s ease; /* Smooth border color changes */
+  }
+  
+  .summary {
+    display: flex;
+    color: white;
+    line-height: 1.5;
+    cursor: pointer;
+    gap: 10px;
+    align-items: center;
+    border-radius: 10px;
+    justify-content: space-between;
+    padding: 15px; /* Increased padding for better spacing */
+  }
+  
+  .details.open .summary,
+  .summary:hover {
+    color: #99ecec; /* Color transition for hover or open state */
+  }
+  
+  .summary::after {
+    content: '\F282'; /* Downward arrow icon */
+    transition: transform 0.3s ease; /* Smooth rotation transition */
+    font-size: 14px; /* Slightly larger icon size */
+    font-family: 'bootstrap-icons'; /* Ensure Bootstrap Icons is loaded */
+  }
+  
+  .content {
+    height: 0; /* Content is hidden by default */
+    overflow: hidden;
+    font-size: 15px;
+    transition: height 0.5s ease; /* Smoother height transition */
+    color: white;
+    padding: 0 20px; /* Added horizontal padding for better readability */
+    width: 100%; /* Ensures full width of the accordion */
+    box-sizing: border-box; /* Ensures padding doesn't cause overflow */
+  }
+  
+  .details.open .content {
+    height: auto; /* Dynamically adjusts height when open */
+    padding: 15px 20px; /* Adds padding for open state */
+  }
+  
+  .details.open .summary::after {
+    transform: rotate(180deg); /* Rotates the arrow icon when open */
+  }
+  
+.head{
+    color: white;
+    text-align: center;
+}
