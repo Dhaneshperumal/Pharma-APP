@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Form, Button, Container, Row, Col, ListGroup, Modal } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
-import './Checkout.css';
+import '../../styles/checkout.css';
 
 const Checkout = () => {
   const location = useLocation();
@@ -49,7 +49,7 @@ const Checkout = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent the default form submission behavior
+    e.preventDefault(); 
     if (currentStep === 1) {
       setIsShippingComplete(true);
       setCurrentStep(2);
@@ -57,7 +57,7 @@ const Checkout = () => {
       setIsSummaryComplete(true);
       setCurrentStep(3);
     } else if (currentStep === 3) {
-      // Validate payment details based on selected payment method
+     
       if (formData.paymentMethod === 'creditCard' && (!formData.cardNumber || !formData.cardExpiry || !formData.cardCVC)) {
         alert('Please fill in all credit card details.');
         return;
@@ -66,9 +66,9 @@ const Checkout = () => {
         alert('Please enter your UPI ID.');
         return;
       }
-      // Show success modal
+     
       setShowSuccessModal(true);
-      // Reset form and cart after placing the order
+      
       resetFormAndCart();
     }
   };
@@ -87,13 +87,13 @@ const Checkout = () => {
       cardCVC: '',
       upiId: '',
     });
-    setCartItems([]); // Clear cart items
-    setCurrentStep(1); // Reset to the first step
+    setCartItems([]);
+    setCurrentStep(1); 
   };
 
   const handleCloseModal = () => {
     setShowSuccessModal(false);
-    navigate('/'); // Redirect to home or another page after closing the modal
+    navigate('/');
   };
 
   return (

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import './Loader.css'; // Import circular loader CSS
+import '../../styles/loader.css';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -16,12 +16,12 @@ const ProductList = () => {
         const interval = setInterval(() => {
           setLoadingPercentage((prev) => {
             if (prev >= 100) return 100;
-            return prev + 20; // Increment by 20%
+            return prev + 20;
           });
         }, 500); 
 
         const response = await fetch('https://api.fda.gov/drug/label.json?search=*&limit=250');
-        clearInterval(interval); // Stop the loader once the data is fetched
+        clearInterval(interval); 
         const data = await response.json();
         const results = data.results || [];
 
@@ -54,7 +54,7 @@ const ProductList = () => {
         <div className="circle-loader">
           {/* <div className="circle" style={{ '--percentage': `${loadingPercentage}%` }}></div> */}
         </div>
-        <div className="spinner"></div> {/* Spinner element added */}
+        <div className="spinner"></div> 
         {/* <p>Loading products... {loadingPercentage}%</p> */}
       </div>
     );

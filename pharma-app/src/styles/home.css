@@ -99,6 +99,11 @@ body {
         transform: translate(33%,0%);
         
     }
+    .search input{
+        width: 150px;
+        font-size: medium;
+        margin-top: 15px;
+    }
    
     .place{
         margin-top: 50px;
@@ -134,7 +139,7 @@ body {
 .slide img {
     width: 100%;
     height: 100%; 
-    object-fit: cover; 
+   
 }
 
 .navigation-manual {
@@ -357,20 +362,20 @@ body {
     width: 40%;
     border-radius: 8px;
     z-index: 2;
-    backdrop-filter: blur(8px); /* Glass effect */
-    background-color: rgba(255, 255, 255, 0.2); /* Adds semi-transparent background */
-    color: #333; /* Darker text for better contrast */
+    backdrop-filter: blur(8px); 
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #333; 
     text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional shadow for more emphasis */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Make Heading Colors More Distinct */
 .content h3 {
-    color: #000; /* Strong black color for better readability */
+    color: #000; 
 }
 
 .content h4 {
-    color: hsl(143, 85%, 75%); /* Accent color for headings */
+    color: hsl(143, 85%, 75%); 
 }
 
 /* Button Styling */
@@ -378,8 +383,8 @@ body {
     margin-top: 20px;
     padding: 12px 24px;
     border: none;
-    background: #007bff; /* Blue background for good contrast */
-    color: #fff; /* White text for readability */
+    background: #007bff; 
+    color: #fff; 
     font-size: 16px;
     cursor: pointer;
     font-weight: bold;
@@ -388,7 +393,7 @@ body {
 }
 
 .content button:hover {
-    background: #0056b3; /* Darker blue for hover effect */
+    background: #0056b3; 
 }
 
 
@@ -428,7 +433,7 @@ body {
   /* Responsive styles */
   @media (max-width: 768px) {
     .popular {
-      min-width: 200px; /* Adjust minimum width for mobile */
+      min-width: 200px; 
     }
   }
 
@@ -437,18 +442,19 @@ body {
 
 /* catagory  */
 
-.card{
-    width: 320px;
+.card img {
+    object-fit: cover;
 }
 
 .catbtn button{
-    background-color: #616161;
+    background-color: #bbd7ff;
     border: none;
     border-radius: 10px;
+    color: #000;
 }
 .catbtn button:hover{
     border: 1px solid #121212;
-    background-color: #616161;
+    background-color: #c6e3fa;
 }
 /* catagory */
 
@@ -461,7 +467,7 @@ body {
     position: relative;
     width: 100%;
     overflow: hidden;
-    padding: 0 30px; /* Add space on the sides */
+    padding: 0 30px; 
   }
   
   .scroll-content {
@@ -509,11 +515,11 @@ body {
   }
   
   .left-btn {
-    left: 20px; /* Space from the left edge */
+    left: 20px; 
   }
   
   .right-btn {
-    right: 20px; /* Space from the right edge */
+    right: 20px; 
   }
   
   /* testimonials */
@@ -522,7 +528,6 @@ body {
     text-align: center;
     margin: 50px 0;
     padding: 20px;
-    background-color: #f9f9f9;
   }
   
   .testimonials-section h2 {
@@ -552,19 +557,19 @@ body {
     display: flex;
     overflow-x: auto;
     scroll-behavior: smooth;
-    gap: 40px; /* Space between testimonials */
+    gap: 40px; 
     width: 100%;
     padding: 20px 0;
   }
   
 .testimonial {
   text-align: left;
-  font-size: 1.2em; /* Bigger font for better readability */
+  font-size: 1.2em; 
   line-height: 1.6;
   color: #333;
   flex-shrink: 0;
-  width: 400px; /* Reduced from 500px to make it more compact */
-  margin: 0 20px; /* Added spacing to the left and right */
+  width: 400px; 
+  margin: 0 20px; 
 }
 
 .testimonial-highlight {
@@ -576,7 +581,7 @@ body {
 
 .testimonial-message {
   font-size: 1.1em;
-  color: #595959; /* Dimmer version of the highlight color */
+  color: #595959; 
   margin-bottom: 15px;
 }
 
@@ -584,7 +589,7 @@ body {
   text-align: right;
   font-weight: bold;
   font-size: 1em;
-  color: #787878; /* Slightly dimmer shade */
+  color: #787878;
 }
 
   
@@ -623,17 +628,16 @@ body {
 
   .offer-section {
     display: flex;
-    align-items: center; /* Aligns items vertically */
-    justify-content: center; /* Center the content */
+    align-items: center;
+    justify-content: center; 
     padding: 20px;
-    background-color: #f8fff5; /* Light background for the offer section */
-    border-radius: 10px; /* Rounded corners */
-    margin: 20px 0; /* Space above and below */
+    border-radius: 10px; 
+    margin: 20px 0; 
     height: 600px;
 }
 @media (max-width: 768px) {
     .popular {
-      max-width: 400px; /* Adjust minimum width for mobile */
+      max-width: 400px; 
     }
   }
 
@@ -642,27 +646,27 @@ body {
   .content-box {
     width: 300px;
     height: 300px;
-    background-image: url('https://via.placeholder.com/300'); /* Replace with your image URL */
+    background-image: url('https://via.placeholder.com/300');
     background-size: cover;
     background-position: center;
-    filter: blur(20px); /* Adds the blur effect */
-    border-radius: 10px; /* Smoothens corners */
-    position: absolute; /* Keeps this behind the content */
-    z-index: 1; /* Positions behind text content */
+    filter: blur(20px); 
+    border-radius: 10px; 
+    position: absolute;
+    z-index: 1;
   }
   
   /* Content Overlay */
   .content {
     background-color: #f9fbf9;
-    position: relative; /* Ensures this is layered above the blur */
+    position: relative;
     padding: 40px;
-    justify-content: center; /* Center vertical alignment */
-     align-items: center;    /* Center horizontal alignment */
+    justify-content: center; 
+     align-items: center;   
     width: 50%;
     height: 400px;
     border-radius: 8px;
-    z-index: 2; /* Places it above the blurred box */
-    backdrop-filter: blur(8px); /* Adds frosted glass effect */
+    z-index: 2; 
+    backdrop-filter: blur(8px); 
     color: white;
     text-align: center;
   }

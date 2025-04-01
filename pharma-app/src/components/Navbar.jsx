@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Navbar, Container, Nav, Form, Button, Offcanvas, Badge } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import SearchBar from '../pages/SearchBar'; // Import the SearchBar component
+import SearchBar from '../pages/SearchBar'; 
 import '../styles/navbar.css';
 
 const Navbars = () => {
@@ -11,7 +11,7 @@ const Navbars = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchInHeader, setShowSearchInHeader] = useState(false);
-  const [cartItems, setCartItems] = useState(0); // Initialize cartItems
+  const [cartItems, setCartItems] = useState(0); 
   const [suggestions, setSuggestions] = useState([]);
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
   const categories = ['/productlist', '/productdetail', '/cart'];
@@ -22,7 +22,7 @@ const Navbars = () => {
 
     // Load cart items from local storage
     const storedCartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-    setCartItems(storedCartItems.length); // Set the number of items in the cart
+    setCartItems(storedCartItems.length); 
 
     // Add scroll listener to toggle search bar visibility
     const handleScroll = () => {
@@ -58,7 +58,6 @@ const Navbars = () => {
 
     // Fetch suggestions based on the query
     if (query) {
-      // Replace this with your actual API call or logic to get suggestions
       const fetchedSuggestions = ['Ibuprofen', 'Paracetamol', 'Aspirin', 'Amoxicillin', 'Ciprofloxacin'].filter(item =>
         item.toLowerCase().includes(query.toLowerCase())
       );
@@ -70,12 +69,12 @@ const Navbars = () => {
 
   const handleSuggestionClick = (suggestion) => {
     setSearchQuery(suggestion);
-    setSuggestions([]); // Clear suggestions after selection
+    setSuggestions([]);
   };
 
   return (
     <>
-      {/* Sticky Header Search Bar */}
+  
       {showSearchInHeader && (
         <div
           className="header-search"

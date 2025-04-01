@@ -12,25 +12,22 @@ const Login = () => {
   const [loginError, setLoginError] = useState(''); 
   const navigate = useNavigate();
 
-  // Email validation with regex
   const validateEmail = (email) => {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
     return emailRegex.test(email);
   };
 
-  // Handle email input change
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
     setEmailError(!validateEmail(e.target.value) ? 'Please enter a valid email' : '');
   };
 
-  // Handle password input change
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
     setPasswordError(e.target.value.length < 8 ? 'Password must be at least 8 characters' : '');
   };
 
-  // Handle login form submission
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoginError(''); 
@@ -40,20 +37,20 @@ const Login = () => {
         const response = await axios.post('http://localhost:8080/api/users/login', { email, password });
         const token = response.data.token;
         
-        // Store token in local storage
+       
         localStorage.setItem('token', token);
 
-        // Decode role from token
+       
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
         const userRole = decodedToken.role;
 
-        // Redirect based on user role
+  
         switch (userRole) {
           case 'Admin':
             navigate('/admin');
             break;
-          case 'Customer':
-            navigate('/customer');
+          case '':
+            navigate('/');
             break;
           default:
             navigate('/unauthorized');

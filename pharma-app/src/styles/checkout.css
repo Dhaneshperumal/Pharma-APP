@@ -1,9 +1,9 @@
-/*Button*/
+
 .button-group {
     display: flex;
-    align-items: center; /* Vertically centers the buttons */
-    justify-content: flex-start; /* Aligns the buttons to the left */
-    gap: 10px; /* Adds space between the buttons */
+    align-items: center; 
+    justify-content: flex-start;
+    gap: 10px; 
   }
   
   
@@ -51,7 +51,7 @@
   
   @media (max-width: 768px) {
     .button-group {
-      flex-direction: column; /* Stack buttons on smaller screens */
+      flex-direction: column; 
       gap: 10px;
     }
   }
@@ -78,15 +78,14 @@
   }
 
 
-/*Checkout.css */
 .header-complete {
-    background-color: #d4edda; /* Light green */
-    color: #155724; /* Dark green */
+    background-color: #d4edda; 
+    color: #155724; 
   }
   
   .header-incomplete {
-    background-color: #f8d7da; /* Light red */
-    color: #721c24; /* Dark red */
+    background-color: #f8d7da; 
+    color: #721c24; 
   }
   
   .text-success {
@@ -102,13 +101,13 @@
   
   @media (max-width: 768px) {
     .product-image {
-      height: 180px; /* Resize image for smaller screens */
+      height: 180px; 
     }
   }
   
   @media (max-width: 576px) {
     .product-image {
-      height: 160px; /* Further resize for mobile */
+      height: 160px; 
     }
   }
   
@@ -123,7 +122,7 @@
       }
   
       .product-image {
-        height: 240px; /* Default height for larger screens */
+        height: 240px; 
         object-fit: cover;
         border-top-left-radius: 10px; 
         border-top-right-radius: 10px;
@@ -139,32 +138,32 @@
         width: 100%;
       }
   
-      /* Responsive Styles */
+  
       @media (max-width: 768px) {
         .product-image {
-          height: 250px; /* Resize image for tablets */
+          height: 250px; 
         }
         .card-title {
-          font-size: 1.1rem; /* Adjust title font size for tablets */
+          font-size: 1.1rem; 
         }
         .card-text {
-          font-size: 0.9rem; /* Adjust text font size for tablets */
+          font-size: 0.9rem;
         }
         .button-group {
           flex-direction: column;
           gap: 10px;
         }
         .button-group button {
-          width: 100%; /* Full-width buttons on smaller screens */
+          width: 100%;
         }
       }
   
       @media (max-width: 576px) {
         .product-image {
-          height: 250px; /* Resize image for mobile devices */
+          height: 250px;
         }
         .quantity-container span {
           font-weight: bold;
-          font-size: 1rem; /* Adjust quantity font size for mobile */
+          font-size: 1rem; 
         }
       }

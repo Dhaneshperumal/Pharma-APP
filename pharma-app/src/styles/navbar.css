@@ -1,12 +1,12 @@
 .navbar {
-    background-color: #c3fad8;
-    padding: 15px 0; /* Adjusted padding for better spacing */
+    background-color: #cffae0;
+    padding: 15px 0; 
   }
   
   .navhome {
     text-decoration: none;
     color: rgb(31, 29, 29);
-    font-size: 1.8rem; /* Increase font size for e-commerce look */
+    font-size: 1.8rem; 
     font-weight: bold;
   }
   
@@ -15,12 +15,12 @@
   }
   
   .navb {
-    flex-grow: 1; /* Allows search bar to take up space */
-    max-width: 500px; /* Adjust max width */
+    flex-grow: 1; 
+    max-width: 500px; 
   }
   .navitem .active {
     font-weight: bold;
-    color: #353431; /* Change to your desired active color */
+    color: #353431; 
   }
   
   .textarea {
@@ -37,7 +37,7 @@
   .navitem .nav-link {
     color: rgb(56, 53, 53);
     padding: 10px 15px;
-    font-size: 1.1rem; /* Slightly larger font for navigation */
+    font-size: 1.1rem; 
     font-weight: 500;
   }
   
@@ -84,7 +84,7 @@
     color: rgb(82, 77, 77);
     font-size: 20px;
     padding: 5px;
-    text-decoration: none; /* Removes underline */
+    text-decoration: none; 
   }
   
   /* Search bar positioning for mobile */
@@ -93,7 +93,7 @@
     padding: 10px;
     background-color: #c3fad8;
     position: absolute;
-    top: 56px; /* Adjust based on navbar height */
+    top: 56px; 
     left: 0;
     right: 0;
     z-index: 999;

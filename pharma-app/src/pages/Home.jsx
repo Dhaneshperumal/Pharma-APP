@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/home.css'; 
+import '../styles/faq.css'
 import { BiPhoneCall } from "react-icons/bi";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { Button } from "react-bootstrap";
@@ -14,12 +15,13 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
-  const [products, setProducts] = useState([]); // Initialize products state                                              
+  const [products, setProducts] = useState([]);                                             
   const navigate = useNavigate();
   const [pincode, setPincode] = useState('');
   const [location, setLocation] = useState('');
   const [popupVisible, setPopupVisible] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+  const [openIndex, setOpenIndex] = useState(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -35,7 +37,7 @@ const Home = () => {
     }
   }, [counter]);
 
-  // Fetching random products from the FDA API
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -48,15 +50,15 @@ const Home = () => {
           id: product.id,
           name: product.openfda.brand_name ? product.openfda.brand_name[0] : 'N/A',
           description: product.indications_and_usage ? product.indications_and_usage.join(' ').split(' ').slice(0, 5).join(' ') + '...' : 'N/A',
-          image: product.openfda.image_url ? product.openfda.image_url[0] : '/src/assets/logo.jpeg', // Fallback image
-          price: Math.random() * 100, // Placeholder for price
-          stock: Math.floor(Math.random() * 100), // Placeholder for stock limit
+          image: product.openfda.image_url ? product.openfda.image_url[0] : '/src/assets/logo.jpeg',
+          price: Math.random() * 100, 
+          stock: Math.floor(Math.random() * 100),
           ingredients: product.openfda.active_ingredient ? product.openfda.active_ingredient.slice(0, 5).join(', ') : 'N/A'
         }));
 
-        setRandomProducts(formattedResults.slice(0, 4)); // Pick 4 random products for the slider
-        setRandomPopular(formattedResults); // All fetched products for the popular section
-        setProducts(formattedResults); // Set products state
+        setRandomProducts(formattedResults.slice(0, 4));
+        setRandomPopular(formattedResults); 
+        setProducts(formattedResults);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -78,14 +80,14 @@ const Home = () => {
           id: product.id,
           name: product.openfda.brand_name ? product.openfda.brand_name[0] : 'N/A',
           description: product.indications_and_usage ? product.indications_and_usage.join(' ').split(' ').slice(0, 5).join(' ') + '...' : 'N/A',
-          image: product.openfda.image_url ? product.openfda.image_url[0] : '/src/assets/logo.jpeg', // Fallback image
-          price: (Math.random() * 100).toFixed(2), // Placeholder for price
-          stock: Math.floor(Math.random() * 100), // Placeholder for stock limit
+          image: product.openfda.image_url ? product.openfda.image_url[0] : '/src/assets/logo.jpeg',
+          price: (Math.random() * 100).toFixed(2), 
+          stock: Math.floor(Math.random() * 100),
           ingredients: product.openfda.active_ingredient ? product.openfda.active_ingredient.slice(0, 5).join(', ') : 'N/A'
         }));
 
         setSearchResults(formattedResults);
-        navigate(`/search?query=${searchQuery}`); // Redirect to search results
+        navigate(`/search?query=${searchQuery}`); 
       } catch (error) {
         console.error('Error fetching search results:', error);
       }
@@ -108,7 +110,7 @@ const Home = () => {
 
   const handleSuggestionClick = (suggestion) => {
     setSearchQuery(suggestion);
-    setSuggestions([]); // Clear suggestions after selection
+    setSuggestions([]);
   };
 
   useEffect(() => {
@@ -118,7 +120,7 @@ const Home = () => {
         const data = await response.json();
         const results = data.results || [];
 
-        // Extract unique categories from the results
+        
         const uniqueCategories = [...new Set(results.map(product => product.openfda.substance_name ? product.openfda.substance_name[0] : 'General'))];
         setCategories(uniqueCategories);
         setProducts(results);
@@ -135,6 +137,10 @@ const Home = () => {
     setActiveCategory(category);
   };
 
+  const toggleFAQ = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
   const filteredProducts = activeCategory 
     ? products.filter(product => product.openfda.substance_name && product.openfda.substance_name[0] === activeCategory)
     : products;
@@ -145,16 +151,16 @@ const Home = () => {
     function handleScroll() {
       const container = document.getElementById("popular-items-container");
       if (container.scrollLeft > 0) {
-        setShowLeftButton(true); // Show left button when scrolled right
+        setShowLeftButton(true); 
       } else {
-        setShowLeftButton(false); // Hide left button when at the start
+        setShowLeftButton(false); 
       }
     }
     
     function smoothScroll(direction) {
       const container = document.getElementById("popular-items-container");
-      const scrollAmount = 300; // Distance to scroll per button click
-      const scrollStep = 10; // Smaller increments for smoother motion
+      const scrollAmount = 300; 
+      const scrollStep = 10; 
       const totalSteps = scrollAmount / scrollStep;
       let currentStep = 0;
     
@@ -205,21 +211,49 @@ const Home = () => {
         message: "I’ve been using Truemeds for a while now, and it has never disappointed me. Great discounts and reliable service.",
         author: "Dada Bhai",
       },
-    ];     
+    ];    
+    
+    const faqs = [
+      {
+        question: "What is the purpose of this service?",
+        answer:
+          "Our service provides high-quality landing page designs that help businesses create a strong online presence. We focus on responsive design, user experience, and conversion optimization to ensure your landing page meets your goals.",
+      },
+      {
+        question: "What is included in the landing page design package?",
+        answer:
+          "The landing page design package includes a custom design tailored to your requirements, a responsive layout for all devices, and up to three rounds of revisions. You will also receive the HTML/CSS files and support during the implementation phase.",
+      },
+      {
+        question: "How long does it take to complete a landing page?",
+        answer:
+          "The design process typically takes between 7 to 10 business days, depending on the complexity of the project and the responsiveness of the client in providing feedback.",
+      },
+      {
+        question: "Can you help with the implementation of the landing page?",
+        answer:
+          "Yes, we offer additional services for the implementation of the landing page, including setting up the page on your website and integrating with your existing systems.",
+      },
+      {
+        question: "What information do you need from me to start the project?",
+        answer:
+          "We will need details about your business goals, target audience, branding guidelines, and any specific features or content you want on the landing page.",
+      },
+    ];
 
     function handleScrollTestimonials() {
       const container = document.getElementById("testimonials-container");
       if (container.scrollLeft > 0) {
-        setShowLeftButton(true); // Show left button if scroll position > 0
+        setShowLeftButton(true); 
       } else {
-        setShowLeftButton(false); // Hide left button when at the start
+        setShowLeftButton(false); 
       }
     }
 
     function smoothScrollTestimonials(direction) {
       const container = document.getElementById("testimonials-container");
-      const scrollAmount = 300; // Distance to scroll per click
-      const scrollStep = 10; // Small increments for smoothness
+      const scrollAmount = 300; 
+      const scrollStep = 10;
       const totalSteps = scrollAmount / scrollStep;
       let currentStep = 0;
     
@@ -227,7 +261,7 @@ const Home = () => {
         if (currentStep < totalSteps) {
           container.scrollBy({ left: direction * scrollStep, behavior: "auto" });
           currentStep += 1;
-          requestAnimationFrame(scrollFrame); // Creates smooth animation
+          requestAnimationFrame(scrollFrame); 
         }
       }
     
@@ -243,7 +277,7 @@ const Home = () => {
           const data = await response.json();
           if (data && data[0]) {
             setLocation(data[0].display_name);
-            setPopupVisible(false); // Close popup after selecting location
+            setPopupVisible(false);
           } else {
             alert("Unable to fetch location for the given PIN code.");
           }
@@ -266,7 +300,7 @@ const Home = () => {
             const data = await response.json();
             if (data && data.display_name) {
               setLocation(data.display_name);
-              setPopupVisible(false); // Close popup after fetching location
+              setPopupVisible(false); 
             } else {
               alert("Unable to fetch location for your current position.");
             }
@@ -285,7 +319,10 @@ const Home = () => {
   return (
     <>
  <>
-  <div className="search mt-5 text-center p-5"  >
+ <div style={{
+  backgroundColor:'hsl(198, 76%, 95%)', padding:'10px'
+ }}>
+  <div className="search mt-5 text-center p-5"   >
     <h2>Say Goodbye to High Medicine Prices</h2>
     <p>Compare Prices and Save up to 15%</p>
     <form onSubmit={handleSearchSubmit} className="d-flex justify-content-center align-items-center">
@@ -386,6 +423,7 @@ const Home = () => {
     </Link>
     </div>
   </div>
+  </div>
 </>
 
 
@@ -397,16 +435,16 @@ const Home = () => {
               <input type="radio" name="radio-btn" id="radio4" />
 
               <div className="slide first">
-                <img src="/src/assets/banner1.jpg" alt="1" />
+                <img src="/src/assets/banner5.avif" alt="1" />
               </div>
               <div className="slide second">
-                <img src="/src/assets/banner2.jpg" alt="2" />
+                <img src="/src/assets/banner3.avif" alt="2" />
               </div>
               <div className="slide third">
-                <img src="/src/assets/banner1.jpg" alt="3" />
+                <img src="/src/assets/banner4.avif" alt="3" />
               </div>
               <div className="slide four">
-                <img src="/src/assets/banner2.jpg" alt="4" />
+                <img src="/src/assets/banner1.jpg" alt="4" />
               </div>
 
               <div className="navigation-auto">
@@ -424,6 +462,9 @@ const Home = () => {
             </div>
           </div>
 
+          <div style={{
+  backgroundColor:'hsl(95, 76.00%, 95.10%)',padding:'10px'
+ }}>
       <div className="producthead">
         <h2>Our Featured Products</h2>
         <hr />
@@ -445,7 +486,12 @@ const Home = () => {
         ))}
       </div>
 
+      </div>
+
       {/* Offer Section */}
+      <div style={{
+  backgroundColor:'hsl(198, 76%, 95%)', padding:'10px'
+ }}>
       <div className="offer-section row">
         <div className="content-box"></div>
         <div className="content col-sm-1">
@@ -456,9 +502,13 @@ const Home = () => {
           <Link to={'/productlist'}><button >SHOP NOW</button></Link>
         </div>
       </div>
+      </div>
 
 
       {/* Categories */}
+      <div style={{
+  backgroundColor:'hsl(95, 76.00%, 95.10%)',padding:'10px'
+ }}>
       <div className="container mt-5">
   <div className="d-flex flex-column flex-md-row">
     {/* Sidebar */}
@@ -472,7 +522,7 @@ const Home = () => {
             onClick={() => handleCategoryClick(category)}
             style={{
               cursor: 'pointer',border:'none',
-              backgroundColor: activeCategory === category ? '#c3fad8' : 'white',
+              backgroundColor: activeCategory === category ? 'hsl(199, 88.10%, 86.90%)' : 'white',
             }}
           >
             {category}
@@ -522,16 +572,20 @@ const Home = () => {
     </div>
   </div>
 </div>
+</div>
 
 
 {/* Popular Items */}
+<div style={{
+  backgroundColor:'hsl(198, 76%, 95%)', padding:'10px'
+ }}>
       <div className="producthead">
         <h2>Popular Items</h2>
         <hr />
       </div>
 
       <div className="scroll-container">
-        {/* Conditional rendering for the left button */}
+       
         {showLeftButton && (
           <button className="scroll-btn left-btn" onClick={() => smoothScroll(-1)}>
             &lt;
@@ -558,13 +612,17 @@ const Home = () => {
           &gt;
         </button>
       </div>
+      </div>
 
 {/* What Our Customers Have to Say */}
+<div style={{
+  backgroundColor:'hsl(95, 76.00%, 95.10%)',padding:'10px'
+ }}>
 <div className="testimonials-section">
   <h2>What Our Customers Have to Say</h2>
   <hr className="testimonials-underline" />
   <div className="scroll-container">
-    {/* Left Button (conditionally rendered) */}
+   
     {showLeftButton && (
       <button className="scroll-btn left-btn" onClick={() => smoothScrollTestimonials(-1)}>
         &lt;
@@ -591,6 +649,38 @@ const Home = () => {
     </button>
   </div>
 </div>
+</div>
+
+{/* FAQ  */}
+<div style={{
+  backgroundColor:'hsl(198, 76%, 95%)', padding:'10px'
+ }}>
+<div className="producthead">
+        <h2>FAQ</h2>
+        <hr />
+      <ul className="accordion">
+        {faqs.map((faq, index) => (
+          <li key={index}>
+            <div className="details">
+              <div className="summary" onClick={() => toggleFAQ(index)}>
+                {faq.question}
+              </div>
+              <p
+                className="contents"
+                style={{
+                  height: openIndex === index ? "auto" : "0",
+                  overflow: "hidden",
+                  transition: "height 0.3s ease",
+                }}
+              >
+                {faq.answer}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+    </div>
 
 
 

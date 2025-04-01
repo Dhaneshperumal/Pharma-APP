@@ -78,7 +78,7 @@ const Signup = () => {
     <Container maxWidth="xs">
       <Paper className="paper p-3 mb-5 mt-5 " elevation={3}>
         <img src='/src/assets/logo.jpeg' alt=" Logo" style={{ display: 'block',width:'70px', margin: '10px auto' }} />
-        <h2 className='mt-1 mb-3 fw-bold text-center'>Signup</h2>
+        <h2 className='mt-1 mb-3 fs-3 fw-bold text-center'>Signup</h2>
         <form onSubmit={handleSubmit}>
           <TextField
             className="email mb-3"
@@ -129,6 +129,11 @@ const Signup = () => {
             Signup
           </Button>
         </form>
+         <Grid container justifyContent='center' style={{ marginTop: '10px' }}>
+                <Link to='/login' style={{ textDecoration: 'none', color: '#3f51b5' }}>
+                    Already have an account? Login 
+                  </Link>
+                  </Grid>
       </Paper>
     </Container>
     </>

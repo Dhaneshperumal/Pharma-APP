@@ -13,13 +13,13 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ForgetPassword from "./components/Auth/ForgetPassword";
 import Navbars from "./components/Navbar";
 import Footer from "./components/Footer";
-import Search from './pages/Search'; // Adjust the path based on your project structure
+import Search from './pages/Search';
 import Upload from './pages/Upload';
 import ScrollToTop from './components/Product/ScrollToTop.jsx'; 
 
 function App() {
   const [cartItems, setCartItems] = useState(() => {
-    // Initialize cartItems from local storage
+
     const savedCart = localStorage.getItem('cart');
     return savedCart ? JSON.parse(savedCart) : [];
   });
@@ -28,12 +28,12 @@ function App() {
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((item) => item.id === product.id);
       if (existingItem) {
-        // Increment quantity if product already exists
+       
         return prevItems.map((item) =>
           item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
         );
       }
-      // Add new product with quantity
+      
       return [...prevItems, { ...product, quantity }];
     });
   };
@@ -43,7 +43,6 @@ function App() {
   };
 
   useEffect(() => {
-    // Update local storage whenever cartItems changes
     localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems]);
 

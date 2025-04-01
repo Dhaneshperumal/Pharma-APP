@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Loader.css'; // Ensure you have styles for the loader
+import '../../styles/loader.css'; 
 
 const ProductDetail = ({ addToCart }) => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [quantity, setQuantity] = useState(1);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const ProductDetail = ({ addToCart }) => {
       } catch (error) {
         console.error('Error fetching product details:', error);
       } finally {
-        setLoading(false); // Set loading to false after fetching
+        setLoading(false); 
       }
     };
 
@@ -55,7 +55,7 @@ const ProductDetail = ({ addToCart }) => {
   if (loading) {
     return (
       <div className="loader-container">
-        <div className="spinner"></div> {/* Spinner element */}
+        <div className="spinner"></div> 
         <p>Loading product details...</p>
       </div>
     );

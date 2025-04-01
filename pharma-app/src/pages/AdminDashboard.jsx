@@ -5,7 +5,7 @@ const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [products, setProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({
-    image: null, // Change to hold file object
+    image: null, 
     name: '',
     description: '',
     stock: 0,
@@ -17,14 +17,13 @@ const AdminDashboard = () => {
   useEffect(() => {
     // Fetch users and orders from your API
     const fetchUsers = async () => {
-      // Replace with your API endpoint
       const response = await fetch('/api/users');
       const data = await response.json();
       setUsers(data);
     };
 
     const fetchOrders = async () => {
-      // Replace with your API endpoint
+     
       const response = await fetch('/api/orders');
       const data = await response.json();
       setOrders(data);
@@ -45,7 +44,7 @@ const AdminDashboard = () => {
   const handleImageChange = (e) => {
     setNewProduct((prev) => ({
       ...prev,
-      image: e.target.files[0], // Store the file object
+      image: e.target.files[0], 
     }));
   };
 
@@ -110,9 +109,10 @@ useEffect(() => {
 
   return (
     <div className="container mt-5">
-      <h2>Admin Dashboard</h2>
-      <p>Manage users, products, and orders.</p>
-
+      <div className="text-center">
+      <h2 className='mb-4'>Admin Dashboard</h2>
+      
+      </div>
       <h3>Users Information</h3>
       <Table striped bordered hover>
         <thead>

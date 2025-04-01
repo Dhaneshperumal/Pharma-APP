@@ -13,8 +13,6 @@ const ForgetPassword = () => {
     try {
       const response = await axios.post('/api/forgot-password', { email });
       setMessage(response.data.message);
-
-      // Redirect to login after success
       setTimeout(() => navigate('/login'), 3000);
     } catch (err) {
       setMessage('Error sending reset email. Please try again.');
@@ -39,7 +37,7 @@ const ForgetPassword = () => {
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary">Send Reset Link</button>
+        <button type="submit" className="btn mb-4 btn-primary">Send Reset Link</button>
       </form>
     </div>
   );

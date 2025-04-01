@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/footer.css'; // Import your CSS file for custom styles
+import '../styles/footer.css'; 
 
 const Footer = () => {
   return (
@@ -86,7 +86,6 @@ const Footer = () => {
         <div className="row">
           <div className="col ">
             <h5>Our Payment Partners</h5>
-            {/* Replace with actual payment partner logos */}
             <div className="payment-partners">
               <img src="paymentPartner1.png" alt="Payment Partner 1" />
               <img src="paymentPartner2.png" alt="Payment Partner 2" />

@@ -20,12 +20,12 @@ const Search = () => {
 
           // Map the results to the desired format
           const formattedResults = results.map(product => ({
-            id: product.id, // Assuming there's an ID field
+            id: product.id,
             name: product.openfda.brand_name ? product.openfda.brand_name[0] : 'N/A',
             description: product.indications_and_usage ? product.indications_and_usage.join(' ').split(' ').slice(0, 5).join(' ') + '...' : 'N/A',
-            image: product.openfda.image_url ? product.openfda.image_url[0] : '/src/assets/logo.jpeg', // Fallback image
-            price: Math.random() * 100, // Placeholder for price
-            stock: Math.floor(Math.random() * 100), // Placeholder for stock limit
+            image: product.openfda.image_url ? product.openfda.image_url[0] : '/src/assets/logo.jpeg', 
+            price: Math.random() * 100, 
+            stock: Math.floor(Math.random() * 100),
             ingredients: product.openfda.active_ingredient ? product.openfda.active_ingredient.slice(0, 5).join(', ') : 'N/A'
           }));
 
