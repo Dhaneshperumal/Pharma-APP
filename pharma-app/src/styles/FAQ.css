@@ -47,7 +47,7 @@
     font-family: 'bootstrap-icons'; /* Ensure Bootstrap Icons is loaded */
   }
   
-  .content {
+  .contents {
     height: 0; /* Content is hidden by default */
     overflow: hidden;
     font-size: 15px;

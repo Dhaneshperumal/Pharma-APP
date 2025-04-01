@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import products from '../components/Product/ProductData'; // Import product data
 
 const Search = () => {
   const [searchResults, setSearchResults] = useState([]);
@@ -11,34 +12,27 @@ const Search = () => {
   const [selectedLocation, setSelectedLocation] = useState('');
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (searchQuery) {
-        try {
-          const response = await fetch(`https://api.fda.gov/drug/label.json?search=active_ingredient:"${searchQuery}"`);
-          const data = await response.json();
-          const results = data.results || [];
+    if (searchQuery) {
+      // Filter products based on the search query
+      const results = products.filter(product =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
 
-          // Map the results to the desired format
-          const formattedResults = results.map(product => ({
-            id: product.id, // Assuming there's an ID field
-            name: product.openfda.brand_name ? product.openfda.brand_name[0] : 'N/A',
-            description: product.indications_and_usage ? product.indications_and_usage.join(' ').split(' ').slice(0, 5).join(' ') + '...' : 'N/A',
-            image: product.openfda.image_url ? product.openfda.image_url[0] : '/src/assets/logo.jpeg', // Fallback image
-            price: Math.random() * 100, // Placeholder for price
-            stock: Math.floor(Math.random() * 100), // Placeholder for stock limit
-            ingredients: product.openfda.active_ingredient ? product.openfda.active_ingredient.slice(0, 5).join(', ') : 'N/A'
-          }));
+      // Map the results to the desired format
+      const formattedResults = results.map(product => ({
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        image: product.image,
+        price: product.price,
+        stock: product.stock,
+        ingredients: product.activeIngredients
+      }));
 
-          setSearchResults(formattedResults);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      } else {
-        setSearchResults([]);
-      }
-    };
-
-    fetchData();
+      setSearchResults(formattedResults);
+    } else {
+      setSearchResults([]);
+    }
   }, [searchQuery]);
 
   return (
