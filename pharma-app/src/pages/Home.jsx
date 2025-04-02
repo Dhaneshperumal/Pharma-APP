@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/home.css'; 
+import '../styles/FAQ.css'
 import { BiPhoneCall } from "react-icons/bi";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { Button } from "react-bootstrap";
-import '../styles/FAQ.css';
 
 const Home = () => {
   const [counter, setCounter] = useState(0);
@@ -13,16 +13,15 @@ const Home = () => {
   const [randomPopular, setRandomPopular] = useState([]);
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [setSearchResults] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
-  const [products, setProducts] = useState([]); // Initialize products state                                              
+  const [products, setProducts] = useState([]);                                             
   const navigate = useNavigate();
   const [pincode, setPincode] = useState('');
   const [location, setLocation] = useState('');
   const [popupVisible, setPopupVisible] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [openIndex, setOpenIndex] = useState(null);
-  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -38,7 +37,7 @@ const Home = () => {
     }
   }, [counter]);
 
-  // Fetching random products from the FDA API
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -51,15 +50,15 @@ const Home = () => {
           id: product.id,
           name: product.openfda.brand_name ? product.openfda.brand_name[0] : 'N/A',
           description: product.indications_and_usage ? product.indications_and_usage.join(' ').split(' ').slice(0, 5).join(' ') + '...' : 'N/A',
-          image: product.openfda.image_url ? product.openfda.image_url[0] : '/src/assets/logo.jpeg', // Fallback image
-          price: Math.random() * 100, // Placeholder for price
-          stock: Math.floor(Math.random() * 100), // Placeholder for stock limit
+          image: product.openfda.image_url ? product.openfda.image_url[0] : '/src/assets/logo.jpeg',
+          price: Math.random() * 100, 
+          stock: Math.floor(Math.random() * 100),
           ingredients: product.openfda.active_ingredient ? product.openfda.active_ingredient.slice(0, 5).join(', ') : 'N/A'
         }));
 
-        setRandomProducts(formattedResults.slice(0, 4)); // Pick 4 random products for the slider
-        setRandomPopular(formattedResults); // All fetched products for the popular section
-        setProducts(formattedResults); // Set products state
+        setRandomProducts(formattedResults.slice(0, 4));
+        setRandomPopular(formattedResults); 
+        setProducts(formattedResults);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -81,14 +80,14 @@ const Home = () => {
           id: product.id,
           name: product.openfda.brand_name ? product.openfda.brand_name[0] : 'N/A',
           description: product.indications_and_usage ? product.indications_and_usage.join(' ').split(' ').slice(0, 5).join(' ') + '...' : 'N/A',
-          image: product.openfda.image_url ? product.openfda.image_url[0] : '/src/assets/logo.jpeg', // Fallback image
-          price: (Math.random() * 100).toFixed(2), // Placeholder for price
-          stock: Math.floor(Math.random() * 100), // Placeholder for stock limit
+          image: product.openfda.image_url ? product.openfda.image_url[0] : '/src/assets/logo.jpeg',
+          price: (Math.random() * 100).toFixed(2), 
+          stock: Math.floor(Math.random() * 100),
           ingredients: product.openfda.active_ingredient ? product.openfda.active_ingredient.slice(0, 5).join(', ') : 'N/A'
         }));
 
         setSearchResults(formattedResults);
-        navigate(`/search?query=${searchQuery}`); // Redirect to search results
+        navigate(`/search?query=${searchQuery}`); 
       } catch (error) {
         console.error('Error fetching search results:', error);
       }
@@ -111,7 +110,7 @@ const Home = () => {
 
   const handleSuggestionClick = (suggestion) => {
     setSearchQuery(suggestion);
-    setSuggestions([]); // Clear suggestions after selection
+    setSuggestions([]);
   };
 
   useEffect(() => {
@@ -121,7 +120,7 @@ const Home = () => {
         const data = await response.json();
         const results = data.results || [];
 
-        // Extract unique categories from the results
+        
         const uniqueCategories = [...new Set(results.map(product => product.openfda.substance_name ? product.openfda.substance_name[0] : 'General'))];
         setCategories(uniqueCategories);
         setProducts(results);
@@ -138,6 +137,10 @@ const Home = () => {
     setActiveCategory(category);
   };
 
+  const toggleFAQ = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
   const filteredProducts = activeCategory 
     ? products.filter(product => product.openfda.substance_name && product.openfda.substance_name[0] === activeCategory)
     : products;
@@ -148,16 +151,16 @@ const Home = () => {
     function handleScroll() {
       const container = document.getElementById("popular-items-container");
       if (container.scrollLeft > 0) {
-        setShowLeftButton(true); // Show left button when scrolled right
+        setShowLeftButton(true); 
       } else {
-        setShowLeftButton(false); // Hide left button when at the start
+        setShowLeftButton(false); 
       }
     }
     
     function smoothScroll(direction) {
       const container = document.getElementById("popular-items-container");
-      const scrollAmount = 300; // Distance to scroll per button click
-      const scrollStep = 10; // Smaller increments for smoother motion
+      const scrollAmount = 300; 
+      const scrollStep = 10; 
       const totalSteps = scrollAmount / scrollStep;
       let currentStep = 0;
     
@@ -208,21 +211,49 @@ const Home = () => {
         message: "I’ve been using Truemeds for a while now, and it has never disappointed me. Great discounts and reliable service.",
         author: "Dada Bhai",
       },
-    ];     
+    ];    
+    
+    const faqs = [
+      {
+        question: "What is the purpose of this service?",
+        answer:
+          "Our service provides high-quality landing page designs that help businesses create a strong online presence. We focus on responsive design, user experience, and conversion optimization to ensure your landing page meets your goals.",
+      },
+      {
+        question: "What is included in the landing page design package?",
+        answer:
+          "The landing page design package includes a custom design tailored to your requirements, a responsive layout for all devices, and up to three rounds of revisions. You will also receive the HTML/CSS files and support during the implementation phase.",
+      },
+      {
+        question: "How long does it take to complete a landing page?",
+        answer:
+          "The design process typically takes between 7 to 10 business days, depending on the complexity of the project and the responsiveness of the client in providing feedback.",
+      },
+      {
+        question: "Can you help with the implementation of the landing page?",
+        answer:
+          "Yes, we offer additional services for the implementation of the landing page, including setting up the page on your website and integrating with your existing systems.",
+      },
+      {
+        question: "What information do you need from me to start the project?",
+        answer:
+          "We will need details about your business goals, target audience, branding guidelines, and any specific features or content you want on the landing page.",
+      },
+    ];
 
     function handleScrollTestimonials() {
       const container = document.getElementById("testimonials-container");
       if (container.scrollLeft > 0) {
-        setShowLeftButton(true); // Show left button if scroll position > 0
+        setShowLeftButton(true); 
       } else {
-        setShowLeftButton(false); // Hide left button when at the start
+        setShowLeftButton(false); 
       }
     }
 
     function smoothScrollTestimonials(direction) {
       const container = document.getElementById("testimonials-container");
-      const scrollAmount = 300; // Distance to scroll per click
-      const scrollStep = 10; // Small increments for smoothness
+      const scrollAmount = 300; 
+      const scrollStep = 10;
       const totalSteps = scrollAmount / scrollStep;
       let currentStep = 0;
     
@@ -230,7 +261,7 @@ const Home = () => {
         if (currentStep < totalSteps) {
           container.scrollBy({ left: direction * scrollStep, behavior: "auto" });
           currentStep += 1;
-          requestAnimationFrame(scrollFrame); // Creates smooth animation
+          requestAnimationFrame(scrollFrame); 
         }
       }
     
@@ -246,7 +277,7 @@ const Home = () => {
           const data = await response.json();
           if (data && data[0]) {
             setLocation(data[0].display_name);
-            setPopupVisible(false); // Close popup after selecting location
+            setPopupVisible(false);
           } else {
             alert("Unable to fetch location for the given PIN code.");
           }
@@ -269,7 +300,7 @@ const Home = () => {
             const data = await response.json();
             if (data && data.display_name) {
               setLocation(data.display_name);
-              setPopupVisible(false); // Close popup after fetching location
+              setPopupVisible(false); 
             } else {
               alert("Unable to fetch location for your current position.");
             }
@@ -284,170 +315,117 @@ const Home = () => {
         alert("Geolocation is not supported by your browser.");
       }
     };
-    
-    const faqs = [
-      {question: "What is the purpose of this service?",answer: "Our service provides high-quality landing page designs that help businesses create a strong online presence. We focus on responsive design, user experience, and conversion optimization to ensure your landing page meets your goals."},
-      {question: "What is included in the landing page design package?",answer: "The landing page design package includes a custom design tailored to your requirements, a responsive layout for all devices, and up to three rounds of revisions. You will also receive the HTML/CSS files and support during the implementation phase."},
-      {question: "How long does it take to complete a landing page?",answer: "The design process typically takes between 7 to 10 business days, depending on the complexity of the project and the responsiveness of the client in providing feedback. If you have a specific deadline, please let us know in advance."},
-      {question: "Can you help with the implementation of the landing page?",answer: "Yes, we offer additional services for the implementation of the landing page, including setting up the page on your website and integrating with your existing systems. Please contact us for more details and pricing."},
-      {question: "What information do you need from me to start the project?",answer: "We will need details about your business goals, target audience, branding guidelines, and any specific features or content you want on the landing page. A detailed brief will help us create a design that meets your expectations."}
-    ];
-
-    const toggleFAQ = (index) => {
-      setOpenIndex(openIndex === index ? null : index);
-    };
 
   return (
     <>
-  <>
-  <div
-        className="search mt-5 text-center p-5"
-        style={{backgroundImage: `url('/src/assets/logo.jpeg')`, backgroundSize: 'cover', backgroundPosition: 'center', color: 'white', borderRadius: '10px'}}
-      >
-        <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'black' }}>
-          Say Goodbye to High Medicine Prices
-        </h2>
-        <p style={{ fontSize: '1.2rem', marginBottom: '20px', color: 'black' }}>
-          Compare Prices and Save up to 15%
-        </p>
-        <form onSubmit={handleSearchSubmit} className="d-flex justify-content-center align-items-center">
-          <div className="dropdown me-2" style={{ position: 'relative' }}>
+ <>
+ <div style={{
+  backgroundColor:'hsl(198, 76%, 95%)', padding:'10px'
+ }}>
+  <div className="search mt-5 text-center p-5"   >
+    <h2>Say Goodbye to High Medicine Prices</h2>
+    <p>Compare Prices and Save up to 15%</p>
+    <form onSubmit={handleSearchSubmit} className="d-flex justify-content-center align-items-center">
+      <div className="dropdown me-2">
+        <button
+          className="btn btn-light dropdown-button"
+          type="button"
+          onClick={() => setPopupVisible(!popupVisible)}
+        >
+          Deliver to
+        </button>
+        {popupVisible && (
+          <div className="popup-container"           style={{
+            position: 'absolute',
+            top: '50px',
+            left: '0',
+            right: '0',
+            margin: 'auto',
+            backgroundColor: "white",
+            padding: '15px',
+            border: '1px solid #ccc',
+            borderRadius: '15px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            width: '300px',
+            zIndex: 10
+          }}>
+            <h4>Select Delivery Location</h4>
+            <input
+              type="text"
+              placeholder="Enter PIN Code"
+              value={pincode}
+              onChange={(e) => setPincode(e.target.value)}
+              className="form-control mb-3"
+            />
             <button
-              className="btn btn-light"
-              type="button"
-              onClick={() => setPopupVisible(!popupVisible)}
-              style={{
-                padding: '10px',
-                border: '1px solid #ccc',
-                borderRadius: '15px',
-                cursor: 'pointer',
-                backgroundColor: '#f8f9fa',
+              onClick={(e) => {
+                e.preventDefault();
+                handlePincodeSubmit();
               }}
+              className="btn btn-primary mb-2"
             >
-              Deliver to
+              Submit PIN Code
             </button>
-            {popupVisible && (
-              <div
-                className="popup-container"
-                style={{
-                  position: 'absolute',
-                  top: '50px',
-                  left: '0',
-                  right: '0',
-                  margin: 'auto',
-                  backgroundColor: "white",
-                  padding: '15px',
-                  border: '1px solid #ccc',
-                  borderRadius: '15px',
-                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                  width: '300px',
-                  zIndex: 10,
-                }}
-              >
-                <h4 style={{ fontSize: '1rem', marginBottom: '10px' }}>Select Delivery Location</h4>
-                <input
-                  type="text"
-                  placeholder="Enter PIN Code"
-                  value={pincode}
-                  onChange={(e) => setPincode(e.target.value)}
-                  className="form-control mb-3"
-                  style={{
-                    width: '100%',
-                    padding: '10px',
-                    border: '1px solid #ccc',
-                    borderRadius: '15px',
-                  }}
-                />
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePincodeSubmit();
-                  }}
-                  className="btn btn-primary mb-2"
-                  style={{
-                    width: '90%',
-                    padding: '10px',
-                    borderRadius: '15px',
-                    backgroundColor: '#007bff',
-                    color: 'white',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Submit PIN Code
-                </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                handleCurrentLocation();
+              }}
+              className="btn btn-secondary"
+            >
+              Use Current Location
+            </button>
+          </div>
+        )}
+      </div>
+      <input
+        type="search"
+        className="search-input"
+        placeholder="Search for products"
+        value={searchQuery}
+        onChange={handleSearchChange}
+      />
+      <button type="submit" className="search-button">
+        Search
+      </button>
+    </form>
+    {suggestions.length > 0 && (
+      <div className="suggestions-dropdown"  style={{
+        position: 'absolute',
+        top: '55%',
+        left: '32%',
+        zIndex: 1000,
+        backgroundColor: 'white',
+        border: '1px solid #ccc',
+        borderRadius: '5px',
+        color: 'black',
+        width: '600px',
+        marginTop: '5px'
+      }}>
+        {suggestions.map((suggestion, index) => (
+          <div key={index} className="suggestion-item" onClick={() => handleSuggestionClick(suggestion)}>
+            {suggestion} 
+          </div>
+        ))}
+      </div>
+    )}
+    {location && <p className="current-location">Current Location: <strong>{location}</strong></p>}
+  </div>
 
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleCurrentLocation();
-                  }}
-                  className="btn text-center btn-secondary"
-                  style={{
-                    width: '90%',
-                    padding: '10px',
-                    borderRadius: '15px',
-                    backgroundColor: '#6c757d',
-                    color: 'white',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Use Current Location
-                </button>
-              </div>
-            )}
-          </div>
-          
-          <input
-            type="search"
-            placeholder="Search for products"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            style={{
-              padding: '10px',
-              width: '300px',
-              borderRadius: '15px',
-              border: '1px solid #ccc',
-              marginRight: '10px',
-            }}
-          />
-          <button
-            type="submit"
-            style={{
-              padding: '10px 20px',
-              border: 'none',
-              borderRadius: '15px',
-              backgroundColor: '#007bff',
-              color: 'white',
-              fontSize: '1rem',
-              cursor: 'pointer',
-            }}
-          >
-            Search
-          </button>
-        </form>
-        {suggestions.length > 0 && (
-          <div className="suggestions-dropdown" style={{ position: 'absolute', top:'53%', left:'40%', zIndex: 1000, backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '5px',color:'black', width: '300px', marginTop: '5px' }}>
-            {suggestions.map((suggestion, index) => (
-              <div key={index} className="suggestion-item" onClick={() => handleSuggestionClick(suggestion)} style={{ padding: '10px', cursor: 'pointer' }}>
-                {suggestion}
-              </div>
-            ))}
-          </div>
-        )}
-        {location && (
-          <p className="" style={{ fontSize: '1rem', marginTop: '15px', color: '#333' }}>
-            Current Location: <strong>{location}</strong>
-          </p>
-        )}
-      </div>
-  </>
-      <h3 className="text-center mt-5">PLACE YOUR ORDER</h3>
-      <div className="text-center mt-4 mb-5 place">
-        <Link className="me-4 mb-3" to={'/'}><Button className="fw-bold"><BiPhoneCall className="me-1 fs-5"  />Call to place order</Button></Link>
-        <Link to={'/upload'}><Button className="fw-bold"><FaCloudUploadAlt  className="me-1 fs-5"/>Upload your prescription</Button></Link>
-      </div>
+<div className="place">
+  <h3 className="text-center mt-5 place">PLACE YOUR ORDER</h3>
+  <div className="text-center mt-4 mb-5 ">
+    <Link to={'/'} className="order-link mb-md-5">
+      <Button><BiPhoneCall /> Call to place order</Button>
+    </Link>
+    <Link to={'/upload'} className="order-link">
+      <Button><FaCloudUploadAlt /> Upload your prescription</Button>
+    </Link>
+    </div>
+  </div>
+  </div>
+</>
+
 
       <div className="slider">
             <div className="slides">
@@ -457,16 +435,16 @@ const Home = () => {
               <input type="radio" name="radio-btn" id="radio4" />
 
               <div className="slide first">
-                <img src="/src/assets/banner1.jpg" alt="1" />
+                <img src="/src/assets/banner5.avif" alt="1" />
               </div>
               <div className="slide second">
-                <img src="/src/assets/banner2.jpg" alt="2" />
+                <img src="/src/assets/banner3.avif" alt="2" />
               </div>
               <div className="slide third">
-                <img src="/src/assets/banner1.jpg" alt="3" />
+                <img src="/src/assets/banner4.avif" alt="3" />
               </div>
               <div className="slide four">
-                <img src="/src/assets/banner2.jpg" alt="4" />
+                <img src="/src/assets/banner1.jpg" alt="4" />
               </div>
 
               <div className="navigation-auto">
@@ -484,6 +462,9 @@ const Home = () => {
             </div>
           </div>
 
+          <div style={{
+  backgroundColor:'hsl(95, 76.00%, 95.10%)',padding:'10px'
+ }}>
       <div className="producthead">
         <h2>Our Featured Products</h2>
         <hr />
@@ -505,7 +486,12 @@ const Home = () => {
         ))}
       </div>
 
+      </div>
+
       {/* Offer Section */}
+      <div style={{
+  backgroundColor:'hsl(198, 76%, 95%)', padding:'10px'
+ }}>
       <div className="offer-section row">
         <div className="content-box"></div>
         <div className="content col-sm-1">
@@ -516,9 +502,13 @@ const Home = () => {
           <Link to={'/productlist'}><button >SHOP NOW</button></Link>
         </div>
       </div>
+      </div>
 
 
       {/* Categories */}
+      <div style={{
+  backgroundColor:'hsl(95, 76.00%, 95.10%)',padding:'10px'
+ }}>
       <div className="container mt-5">
   <div className="d-flex flex-column flex-md-row">
     {/* Sidebar */}
@@ -531,8 +521,8 @@ const Home = () => {
             className={`list-group-item ${activeCategory === category ? 'active' : ''}`}
             onClick={() => handleCategoryClick(category)}
             style={{
-              cursor: 'pointer',
-              backgroundColor: activeCategory === category ? '#c3fad8' : 'white',
+              cursor: 'pointer',border:'none',
+              backgroundColor: activeCategory === category ? 'hsl(199, 88.10%, 86.90%)' : 'white',
             }}
           >
             {category}
@@ -572,7 +562,7 @@ const Home = () => {
                     : 'N/A'}
                 </p>
                 <Link to={`/productdetail/${product.id}`} className="catbtn">
-                  <button className="btn btn-primary w-100">View Details</button>
+                  <button className="btn catbtn btn-primary w-100">View Details</button>
                 </Link>
               </div>
             </div>
@@ -582,16 +572,20 @@ const Home = () => {
     </div>
   </div>
 </div>
+</div>
 
 
 {/* Popular Items */}
+<div style={{
+  backgroundColor:'hsl(198, 76%, 95%)', padding:'10px'
+ }}>
       <div className="producthead">
         <h2>Popular Items</h2>
         <hr />
       </div>
 
       <div className="scroll-container">
-        {/* Conditional rendering for the left button */}
+       
         {showLeftButton && (
           <button className="scroll-btn left-btn" onClick={() => smoothScroll(-1)}>
             &lt;
@@ -618,13 +612,17 @@ const Home = () => {
           &gt;
         </button>
       </div>
+      </div>
 
 {/* What Our Customers Have to Say */}
+<div style={{
+  backgroundColor:'hsl(95, 76.00%, 95.10%)',padding:'10px'
+ }}>
 <div className="testimonials-section">
   <h2>What Our Customers Have to Say</h2>
   <hr className="testimonials-underline" />
   <div className="scroll-container">
-    {/* Left Button (conditionally rendered) */}
+   
     {showLeftButton && (
       <button className="scroll-btn left-btn" onClick={() => smoothScrollTestimonials(-1)}>
         &lt;
@@ -651,29 +649,44 @@ const Home = () => {
     </button>
   </div>
 </div>
+</div>
 
-
-<ul className="accordion">
-<div className="head">
+{/* FAQ  */}
+<div style={{
+  backgroundColor:'hsl(198, 76%, 95%)', padding:'10px'
+ }}>
+<div className="producthead">
         <h2>FAQ</h2>
         <hr />
-      </div>
+      <ul className="accordion">
         {faqs.map((faq, index) => (
           <li key={index}>
             <div className="details">
               <div className="summary" onClick={() => toggleFAQ(index)}>
                 {faq.question}
               </div>
-              <p className="content" style={{ height: openIndex === index ? 'auto' : '0' }}>
+              <p
+                className="contents"
+                style={{
+                  height: openIndex === index ? "auto" : "0",
+                  overflow: "hidden",
+                  transition: "height 0.3s ease",
+                }}
+              >
                 {faq.answer}
               </p>
             </div>
           </li>
         ))}
       </ul>
+    </div>
+    </div>
+
+
+
+
     </>
   );
 };
 
 export default Home;
-

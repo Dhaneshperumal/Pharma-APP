@@ -49,7 +49,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (email && password && confirmPassword && !Boolean(emailError) && !Boolean(passwordError) && !Boolean(confirmPasswordError)) {
+    if (email && password && confirmPassword && !emailError && !passwordError && !confirmPasswordError) {
       try {
         const response = await axios.post('http://localhost:8080/api/users/register', {
           email,
