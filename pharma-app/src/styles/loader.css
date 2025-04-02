@@ -1,29 +1,5 @@
-/* Loader Container */
-.loader-container {
-  display: flex;
-  flex-direction: column; 
-  justify-content: center; 
-  align-items: center; 
-  height: 100vh; 
-  font-family: Arial, sans-serif; 
-}
-
-/* Spinner Styling */
-.spinner {
-  width: 40px; 
-  height: 40px; 
-  border: 6px solid #007bff; 
-  border-top: 6px solid transparent;
-  border-radius: 50%; 
-  animation: spin 1s linear infinite; 
-}
-
-/* Spinner Animation */
-@keyframes spin {
-  from {
-    transform: rotate(0deg); 
+/* Add if you need custom spinner styles */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
   }
-  to {
-    transform: rotate(360deg); 
-  }
-}

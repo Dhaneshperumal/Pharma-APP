@@ -13,7 +13,7 @@ body {
     justify-content: center;
     align-items: center;
 }
-.search input{
+.search-input{
     width: 40%;
     padding: 10px 20px;
     border-radius: 20px;
@@ -266,7 +266,7 @@ body {
 .productss {
     display: flex;
     flex-wrap: wrap; 
-    justify-content: center; 
+    
     margin: 25px; 
     margin-bottom: 50px;
 }
@@ -279,7 +279,7 @@ body {
     margin: 15px; 
     padding: 20px; 
     width: 320px; 
-    text-align: center; 
+    /* text-align: center;  */
     transition: transform 0.2s; 
 }
 
@@ -305,6 +305,7 @@ body {
 
 .product button {
     background-color: #222324; 
+    width: 100%;
     color: white;
     border: none; 
     border-radius: 5px;

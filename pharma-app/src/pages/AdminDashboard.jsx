@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Table } from 'react-bootstrap';
+import productsData from '../components/Product/ProductData'; // Import product data
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(productsData); // Initialize with local product data
   const [newProduct, setNewProduct] = useState({
     image: null, 
     name: '',
@@ -15,22 +16,14 @@ const AdminDashboard = () => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    // Fetch users and orders from your API
+    // Fetch users from your API
     const fetchUsers = async () => {
       const response = await fetch('/api/users');
       const data = await response.json();
       setUsers(data);
     };
 
-    const fetchOrders = async () => {
-     
-      const response = await fetch('/api/orders');
-      const data = await response.json();
-      setOrders(data);
-    };
-
     fetchUsers();
-    fetchOrders();
   }, []);
 
   const handleInputChange = (e) => {
@@ -58,54 +51,41 @@ const AdminDashboard = () => {
     formData.append('uses', newProduct.uses);
     formData.append('price', newProduct.price);
 
-    try {
-      const response = await fetch('/api/products', {
-        method: 'POST',
-        body: formData,
-      });
-      if (response.ok) {
-        const addedProduct = await response.json();
-        setProducts((prev) => [...prev, addedProduct]);
-        setNewProduct({
-          image: null,
-          name: '',
-          description: '',
-          stock: 0,
-          uses: '',
-          price: 0,
-        });
-      }
-    } catch (error) {
-      console.error('Error adding product:', error);
-    }
+    // Simulate adding product to local state
+    const addedProduct = {
+      id: products.length + 1, // Simple ID generation
+      ...newProduct,
+    };
+    setProducts((prev) => [...prev, addedProduct]);
+    setNewProduct({
+      image: null,
+      name: '',
+      description: '',
+      stock: 0,
+      uses: '',
+      price: 0,
+    });
   };
 
-  
-//Local storage handling for products and orders
-const saveToLocalStorage = (key, data) => {
-  localStorage.setItem(key, JSON.stringify(data));
-};
+  // Local storage handling for products and orders
+  const saveToLocalStorage = (key, data) => {
+    localStorage.setItem(key, JSON.stringify(data));
+  };
 
-const loadFromLocalStorage = (key) => {
-  const data = localStorage.getItem(key);
-  return data ? JSON.parse(data) : [];
-};
+  const loadFromLocalStorage = (key) => {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : [];
+  };
 
-// Use local storage for products and orders
-useEffect(() => {
-  const storedProducts = loadFromLocalStorage('products');
-  const storedOrders = loadFromLocalStorage('orders');
-  setProducts(storedProducts);
-  setOrders(storedOrders);
-}, []);
+  // Use local storage for orders
+  useEffect(() => {
+    const storedOrders = loadFromLocalStorage('orders');
+    setOrders(storedOrders);
+  }, []);
 
-useEffect(() => {
-  saveToLocalStorage('products', products);
-}, [products]);
-
-useEffect(() => {
-  saveToLocalStorage('orders', orders);
-}, [orders]);
+  useEffect(() => {
+    saveToLocalStorage('orders', orders);
+  }, [orders]);
 
   return (
     <div className="container mt-5">
@@ -225,6 +205,5 @@ useEffect(() => {
     </div>
   );
 };
-
 
 export default AdminDashboard;
