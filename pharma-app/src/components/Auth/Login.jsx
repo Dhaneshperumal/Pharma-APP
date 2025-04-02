@@ -1,68 +1,112 @@
-import { Button, Container, Grid, Paper, TextField } from '@mui/material';
+import { Button, Container, Grid, Paper, TextField, Divider, Typography, Box } from '@mui/material';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; 
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import { GoogleLogin } from '@react-oauth/google';
+import CountryCodeSelector from './CountryCodeSelector';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [loginError, setLoginError] = useState(''); 
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [countryCode, setCountryCode] = useState('+1');
+  const [otp, setOtp] = useState('');
+  const [showOtpField, setShowOtpField] = useState(false);
+  const [mobileError, setMobileError] = useState('');
+  const [otpError, setOtpError] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Email validation with regex
-  const validateEmail = (email) => {
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-    return emailRegex.test(email);
+  // Mobile number validation
+  const validateMobileNumber = (number) => {
+    const mobileRegex = /^\d{8,15}$/; // Adjust based on your requirements
+    return mobileRegex.test(number);
   };
 
-  // Handle email input change
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    setEmailError(!validateEmail(e.target.value) ? 'Please enter a valid email' : '');
+  const handleMobileChange = (e) => {
+    const value = e.target.value.replace(/\D/g, ''); // Remove non-digit characters
+    setMobileNumber(value);
+    setMobileError(!validateMobileNumber(value) ? 'Please enter a valid mobile number' : '');
   };
 
-  // Handle password input change
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-    setPasswordError(e.target.value.length < 8 ? 'Password must be at least 8 characters' : '');
+  const handleCountryCodeChange = (code) => {
+    setCountryCode(code);
   };
 
-  // Handle login form submission
-  const handleSubmit = async (e) => {
+  const handleOtpChange = (e) => {
+    const value = e.target.value.replace(/\D/g, ''); // Remove non-digit characters
+    setOtp(value);
+    setOtpError(value.length !== 6 ? 'OTP must be 6 digits' : '');
+  };
+
+  const sendOtp = async () => {
+    if (!mobileNumber || mobileError) {
+      setLoginError('Please enter a valid mobile number');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await axios.post('http://localhost:8080/api/users/send-otp', {
+        phoneNumber: `${countryCode}${mobileNumber}` // Ensure the mobile number is sent correctly
+      });
+      setShowOtpField(true);
+      setLoginError('');
+    } catch {
+      setLoginError('Failed to send OTP. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const verifyOtp = async (e) => {
     e.preventDefault();
-    setLoginError(''); 
-  
-    if (email && password && !emailError && !passwordError) {
-      try {
-        const response = await axios.post('http://localhost:8080/api/users/login', { email, password });
-        const token = response.data.token;
-        
-        // Store token in local storage
-        localStorage.setItem('token', token);
+    
+    if (!otp || otpError) {
+      setLoginError('Please enter a valid OTP');
+      return;
+    }
 
-        // Decode role from token
-        const decodedToken = JSON.parse(atob(token.split('.')[1]));
-        const userRole = decodedToken.role;
+    setIsLoading(true);
+    try {
+      const response = await axios.post('http://localhost:8080/api/users/verify-otp', {
+        mobile: `${countryCode}${mobileNumber}`,
+        otp
+      });
+      
+      const token = response.data.token;
+      localStorage.setItem('token', token);
 
-        // Redirect based on user role
-        switch (userRole) {
-          case 'Admin':
-            navigate('/admin');
-            break;
-          case 'Customer':
-            navigate('/customer');
-            break;
-          default:
-            navigate('/unauthorized');
-        }
-      } catch (error) {
-        setLoginError(error.response && error.response.status === 401 ? 'Invalid credentials, please try again.' : 'An error occurred. Please try again later.');
+      // Decode role from token and redirect
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      const userRole = decodedToken.role;
+
+      switch (userRole) {
+        case 'Admin':
+          navigate('/admin');
+          break;
+        case 'Customer':
+          navigate('/customer');
+          break;
+        default:
+          navigate('/unauthorized');
       }
-    } else {
-      setLoginError('Please fill in all fields correctly.');
+    } catch (error) {
+      setLoginError(error.response?.data?.message || 'Invalid OTP. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const response = await axios.post('http://localhost:8080/api/users/google-auth', {
+        credential: credentialResponse.credential
+      });
+      
+      localStorage.setItem('token', response.data.token);
+      navigate('/'); // Or based on user role
+    } catch {
+      setLoginError('Google authentication failed. Please try again.');
     }
   };
 
@@ -70,55 +114,81 @@ const Login = () => {
     <Container maxWidth="xs">
       <Paper className='paper mt-5 mb-5' elevation={3} style={{ padding: '20px' }}>
         <img src='/src/assets/logo.jpeg' alt='logo' style={{ display: 'block', width: '50px', margin: '10px auto' }} />
-        <h2 className='text-center fw-bold'>Login</h2>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label='Email'
-            variant='outlined'
-            fullWidth
-            value={email}
-            onChange={handleEmailChange}
-            error={Boolean(emailError)}
-            helperText={emailError}
-            margin='normal'
-          />
-          <TextField
-            label='Password'
-            variant='outlined'
-            fullWidth
-            type='password'
-            value={password}
-            onChange={handlePasswordChange}
-            error={Boolean(passwordError)}
-            helperText={passwordError}
-            margin='normal'
-          />
-          
-          {loginError && (
-            <p style={{ color: 'red', marginTop: '10px' }}>{loginError}</p>
-          )}
+        <h2 className='text-center fw-bold'></h2>
+        
+        {!showOtpField ? (
+          <div>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, marginBottom: 2 }}>
+              <CountryCodeSelector 
+                value={countryCode}
+                onChange={handleCountryCodeChange}
+              />
+              <TextField
+                label='Mobile Number'
+                variant='outlined'
+                fullWidth
+                value={mobileNumber}
+                onChange={handleMobileChange}
+                error={Boolean(mobileError)}
+                helperText={mobileError}
+                margin='normal'
+              />
+            </Box>
+            
+            {loginError && (
+              <Typography color="error" style={{ marginTop: '10px' }}>{loginError}</Typography>
+            )}
 
-          <Button
-            variant='contained'
-            color='primary'
-            type='submit'
-            fullWidth
-            style={{ marginTop: '10px' }}
-          >
-            Login
-          </Button>
-        </form>
+            <Button
+              variant='contained'
+              color='primary'
+              fullWidth
+              onClick={sendOtp}
+              disabled={isLoading || !mobileNumber || Boolean(mobileError)}
+              style={{ marginTop: '10px' }}
+            >
+              {isLoading ? 'Sending...' : 'Send OTP'}
+            </Button>
+          </div>
+        ) : (
+          <form onSubmit={verifyOtp}>
+            <TextField
+              label='Enter OTP'
+              variant='outlined'
+              fullWidth
+              value={otp}
+              onChange={handleOtpChange}
+              error={Boolean(otpError)}
+              helperText={otpError}
+              margin='normal'
+            />
+            
+            {loginError && (
+              <Typography color="error" style={{ marginTop: '10px' }}>{loginError}</Typography>
+            )}
 
-        <Grid container justifyContent='center' style={{ marginTop: '10px' }}>
-          <Link to='/signup' style={{ textDecoration: 'none', color: '#3f51b5' }}>
-            Don't have an account? Sign up
-          </Link>
-        </Grid>
-        <Grid container justifyContent='center' style={{ marginTop: '10px' }}>
-        <Link to='/forget' style={{ textDecoration: 'none', color: '#3f51b5' }}>
-            Forget password ?
-          </Link>
-          </Grid>
+            <Button
+              variant='contained'
+              color='primary'
+              type='submit'
+              fullWidth
+              disabled={isLoading || !otp || Boolean(otpError)}
+              style={{ marginTop: '10px' }}
+            >
+              {isLoading ? 'Verifying...' : 'Verify OTP'}
+            </Button>
+          </form>
+        )}
+
+        <Divider sx={{ my: 3 }}>OR</Divider>
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => setLoginError('Google login failed')}
+            width="100%"
+          />
+        </Box>
       </Paper>
     </Container>
   );
