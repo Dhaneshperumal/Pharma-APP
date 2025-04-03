@@ -14,7 +14,7 @@ const Navbars = () => {
   const [showSearchInHeader, setShowSearchInHeader] = useState(false);
   const [cartItems, setCartItems] = useState(0); 
   const [suggestions, setSuggestions] = useState([]);
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
+  // Removed unused variable 'isAuthPage' to fix the compile error
   const categories = ['/productlist', '/productdetail', '/cart'];
 
   useEffect(() => {
@@ -243,12 +243,8 @@ const Navbars = () => {
           <div className="d-flex align-items-center">
             {!isAuthenticated ? (
               <>
-                <Link to="/login">
-                  <Button variant="outline-primary" className="me-3" style={{ borderRadius: '20px' }}>
-                    Login / Signup
-                  </Button>
-                </Link>
-               
+                <Link to="/login"><Button variant="outline-dark" className="me-2">Login/Signup</Button></Link>
+                {/* <Link to="/signup"><Button variant="outline-dark" className="me-2">Signup</Button></Link> */}
               </>
             ) : (
               <>
