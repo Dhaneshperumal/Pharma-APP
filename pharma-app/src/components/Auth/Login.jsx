@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import {
@@ -11,259 +11,336 @@ import {
   Typography,
   Box,
   CircularProgress,
-  Alert
+  Alert,
+  MenuItem,
+  Snackbar
 } from '@mui/material';
-import CountryCodeSelector from './CountryCodeSelector';
 
-// Configuration
-const API_BASE_URL = 'http://localhost:8080/api';
-const GOOGLE_CLIENT_ID = '448185632803-o10moscguqnt788vorlr5e3o68gqq2vb.apps.googleusercontent.com';
+// Environment configuration
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '448185632803-o10moscguqnt788vorlr5e3o68gqq2vb.apps.googleusercontent.com'
+
+// Country code options
+const COUNTRY_CODES = [
+  { value: '+1', label: '+1 (US)' },
+  { value: '+91', label: '+91 (IN)' },
+  { value: '+44', label: '+44 (UK)' },
+  { value: '+86', label: '+86 (CN)' }
+];
 
 const Login = () => {
-  const [mobileNumber, setMobileNumber] = useState('');
-  const [countryCode, setCountryCode] = useState('+1');
-  const [otp, setOtp] = useState('');
-  const [showOtpField, setShowOtpField] = useState(false);
-  const [mobileError, setMobileError] = useState('');
-  const [otpError, setOtpError] = useState('');
-  const [loginError, setLoginError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [otpCountdown, setOtpCountdown] = useState(0);
+  const [formData, setFormData] = useState({
+    countryCode: '+1',
+    mobileNumber: '',
+    otp: ''
+  });
+  const [uiState, setUiState] = useState({
+    showOtpField: false,
+    isLoading: false,
+    otpCountdown: 0,
+    snackbar: {
+      open: false,
+      message: '',
+      severity: 'info'
+    }
+  });
+  const [errors, setErrors] = useState({
+    mobile: '',
+    otp: '',
+    login: ''
+  });
+  
   const navigate = useNavigate();
 
   // Countdown timer for OTP resend
   useEffect(() => {
-    if (otpCountdown > 0) {
-      const timer = setTimeout(() => setOtpCountdown(otpCountdown - 1), 1000);
-      return () => clearTimeout(timer);
+    let timer;
+    if (uiState.otpCountdown > 0) {
+      timer = setTimeout(() => {
+        setUiState(prev => ({ ...prev, otpCountdown: prev.otpCountdown - 1 }));
+      }, 1000);
     }
-  }, [otpCountdown]);
+    return () => clearTimeout(timer);
+  }, [uiState.otpCountdown]);
 
   const validateMobileNumber = (number) => {
     const mobileRegex = /^\d{8,15}$/;
     return mobileRegex.test(number);
   };
 
-  const handleMobileChange = (e) => {
-    const value = e.target.value.replace(/\D/g, '');
-    setMobileNumber(value);
-    setMobileError(validateMobileNumber(value) ? '' : 'Please enter a valid mobile number');
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    
+    if (name === 'mobileNumber') {
+      const digitsOnly = value.replace(/\D/g, '');
+      setFormData(prev => ({ ...prev, [name]: digitsOnly }));
+      
+      setErrors(prev => ({
+        ...prev,
+        mobile: validateMobileNumber(digitsOnly) ? '' : 'Please enter 8-15 digits'
+      }));
+    } 
+    else if (name === 'otp') {
+      const digitsOnly = value.replace(/\D/g, '');
+      setFormData(prev => ({ ...prev, [name]: digitsOnly }));
+      
+      setErrors(prev => ({
+        ...prev,
+        otp: digitsOnly.length === 6 ? '' : 'OTP must be 6 digits'
+      }));
+    }
+    else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
-  const handleCountryCodeChange = (code) => {
-    setCountryCode(code);
-  };
-
-  const handleOtpChange = (e) => {
-    const value = e.target.value.replace(/\D/g, '');
-    setOtp(value);
-    setOtpError(value.length === 6 ? '' : 'OTP must be 6 digits');
+  const showSnackbar = (message, severity = 'error') => {
+    setUiState(prev => ({
+      ...prev,
+      snackbar: { open: true, message, severity }
+    }));
   };
 
   const sendOtp = async () => {
-    if (!mobileNumber || mobileError) {
-      setLoginError('Please enter a valid mobile number');
+    if (!validateMobileNumber(formData.mobileNumber)) {
+      setErrors(prev => ({ ...prev, mobile: 'Invalid mobile number' }));
       return;
     }
 
-    setIsLoading(true);
-    setLoginError('');
-    
+    setUiState(prev => ({ ...prev, isLoading: true }));
+    setErrors(prev => ({ ...prev, login: '' }));
+
     try {
-      const fullNumber = `${countryCode}${mobileNumber}`;
+      const fullNumber = `${formData.countryCode}${formData.mobileNumber}`;
+      console.log('Sending OTP to:', fullNumber);
+      
       const response = await axios.post(`${API_BASE_URL}/auth/send-otp`, {
         phoneNumber: fullNumber
       });
 
       if (response.data.success) {
-        setShowOtpField(true);
-        setOtpCountdown(120); // 2 minutes countdown
+        setUiState(prev => ({
+          ...prev,
+          showOtpField: true,
+          otpCountdown: 120,
+          isLoading: false
+        }));
+        
         if (response.data.otp) {
           console.log('Development OTP:', response.data.otp);
+          showSnackbar(`OTP sent: ${response.data.otp}`, 'info');
+        } else {
+          showSnackbar('OTP sent successfully', 'success');
         }
       } else {
-        setLoginError(response.data.message || 'Failed to send OTP');
+        throw new Error(response.data.message || 'Failed to send OTP');
       }
     } catch (error) {
-      setLoginError(error.response?.data?.message || 'Failed to send OTP. Please try again.');
+      console.error('OTP send error:', error);
+      const message = error.response?.data?.message || error.message;
+      setErrors(prev => ({ ...prev, login: message }));
+      showSnackbar(message);
     } finally {
-      setIsLoading(false);
+      setUiState(prev => ({ ...prev, isLoading: false }));
     }
   };
 
   const verifyOtp = async (e) => {
     e.preventDefault();
     
-    if (!otp || otpError) {
-      setLoginError('Please enter a valid OTP');
+    if (formData.otp.length !== 6) {
+      setErrors(prev => ({ ...prev, otp: 'Invalid OTP' }));
       return;
     }
 
-    setIsLoading(true);
-    setLoginError('');
-    
+    setUiState(prev => ({ ...prev, isLoading: true }));
+    setErrors(prev => ({ ...prev, login: '' }));
+
     try {
-      const fullNumber = `${countryCode}${mobileNumber}`;
+      const fullNumber = `${formData.countryCode}${formData.mobileNumber}`;
+      console.log('Verifying OTP for:', fullNumber);
+      
       const response = await axios.post(`${API_BASE_URL}/auth/verify-otp`, {
         phoneNumber: fullNumber,
-        otp
+        otp: formData.otp
       });
 
       if (response.data.success) {
         localStorage.setItem('token', response.data.token);
-        navigate('/');
+        showSnackbar('Login successful!', 'success');
+        setTimeout(() => navigate('/'), 1000);
       } else {
-        setLoginError(response.data.message || 'OTP verification failed');
+        throw new Error(response.data.message || 'OTP verification failed');
       }
     } catch (error) {
-      setLoginError(error.response?.data?.message || 'Invalid OTP. Please try again.');
+      console.error('OTP verification error:', error);
+      const message = error.response?.data?.message || error.message;
+      setErrors(prev => ({ ...prev, login: message }));
+      showSnackbar(message);
     } finally {
-      setIsLoading(false);
+      setUiState(prev => ({ ...prev, isLoading: false }));
     }
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
-    setIsLoading(true);
-    setLoginError('');
-    
+    setUiState(prev => ({ ...prev, isLoading: true }));
+    setErrors(prev => ({ ...prev, login: '' }));
+
     try {
+      console.log('Google auth credential:', credentialResponse);
+      
       const response = await axios.post(`${API_BASE_URL}/auth/google`, {
         credential: credentialResponse.credential
       });
 
       if (response.data.success) {
         localStorage.setItem('token', response.data.token);
-        navigate('/');
+        showSnackbar('Google login successful!', 'success');
+        setTimeout(() => navigate('/'), 1000);
       } else {
-        setLoginError(response.data.message || 'Google authentication failed');
+        throw new Error(response.data.message || 'Google authentication failed');
       }
     } catch (error) {
-      setLoginError(error.response?.data?.message || 'Google authentication failed. Please try again.');
+      console.error('Google auth error:', error);
+      const message = error.response?.data?.message || error.message;
+      setErrors(prev => ({ ...prev, login: message }));
+      showSnackbar(message);
     } finally {
-      setIsLoading(false);
+      setUiState(prev => ({ ...prev, isLoading: false }));
     }
   };
 
   const handleGoogleError = () => {
-    setLoginError('Google login failed. Please try again or use another method.');
-    console.error('Google login failed');
+    const message = 'Google login failed';
+    setErrors(prev => ({ ...prev, login: message }));
+    showSnackbar(message);
   };
 
   return (
     <Container maxWidth="xs" sx={{ py: 4 }}>
       <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
         <Box textAlign="center" mb={4}>
-          <img 
-            src='/logo.png' 
-            alt='Company Logo' 
-            style={{ width: 60, height: 60, objectFit: 'contain' }} 
-          />
-          <Typography variant="h5" component="h1" sx={{ mt: 2, fontWeight: 'bold' }}>
+          <Typography variant="h5" component="h1" sx={{ fontWeight: 'bold' }}>
             Welcome Back
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Sign in to continue to your account
+            Sign in to continue
           </Typography>
         </Box>
         
-        {loginError && (
+        {errors.login && (
           <Alert severity="error" sx={{ mb: 3 }}>
-            {loginError}
+            {errors.login}
           </Alert>
         )}
 
-        {!showOtpField ? (
+        {!uiState.showOtpField ? (
           <Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-              <CountryCodeSelector 
-                value={countryCode}
-                onChange={handleCountryCodeChange}
-              />
+            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
               <TextField
-                label='Mobile Number'
-                variant='outlined'
+                select
+                name="countryCode"
+                value={formData.countryCode}
+                onChange={handleChange}
+                sx={{ width: 120 }}
+              >
+                {COUNTRY_CODES.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                name="mobileNumber"
+                label="Mobile Number"
+                value={formData.mobileNumber}
+                onChange={handleChange}
+                error={!!errors.mobile}
+                helperText={errors.mobile}
                 fullWidth
-                value={mobileNumber}
-                onChange={handleMobileChange}
-                error={Boolean(mobileError)}
-                helperText={mobileError}
-                placeholder='1234567890'
+                placeholder="1234567890"
               />
             </Box>
 
             <Button
-              variant='contained'
               fullWidth
+              variant="contained"
               onClick={sendOtp}
-              disabled={isLoading || !mobileNumber || Boolean(mobileError)}
-              sx={{ mt: 2, py: 1.5 }}
+              disabled={uiState.isLoading || !formData.mobileNumber || !!errors.mobile}
+              sx={{ py: 1.5 }}
             >
-              {isLoading ? <CircularProgress size={24} /> : 'Send OTP'}
+              {uiState.isLoading ? <CircularProgress size={24} /> : 'Send OTP'}
             </Button>
           </Box>
         ) : (
           <Box component="form" onSubmit={verifyOtp}>
             <TextField
-              label='Enter OTP'
-              variant='outlined'
+              name="otp"
+              label="Enter OTP"
+              value={formData.otp}
+              onChange={handleChange}
+              error={!!errors.otp}
+              helperText={errors.otp}
               fullWidth
-              value={otp}
-              onChange={handleOtpChange}
-              error={Boolean(otpError)}
-              helperText={otpError}
               sx={{ mb: 2 }}
               inputProps={{ maxLength: 6 }}
             />
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
               <Typography variant="body2" color="text.secondary">
-                {otpCountdown > 0 ? `Resend OTP in ${otpCountdown}s` : ''}
+                {uiState.otpCountdown > 0 ? `Resend OTP in ${uiState.otpCountdown}s` : ''}
               </Typography>
               <Button
                 size="small"
                 onClick={sendOtp}
-                disabled={otpCountdown > 0 || isLoading}
+                disabled={uiState.otpCountdown > 0 || uiState.isLoading}
               >
                 Resend OTP
               </Button>
             </Box>
 
             <Button
-              variant='contained'
-              type='submit'
               fullWidth
-              disabled={isLoading || !otp || Boolean(otpError)}
+              type="submit"
+              variant="contained"
+              disabled={uiState.isLoading || !formData.otp || !!errors.otp}
               sx={{ py: 1.5 }}
             >
-              {isLoading ? <CircularProgress size={24} /> : 'Verify OTP'}
+              {uiState.isLoading ? <CircularProgress size={24} /> : 'Verify OTP'}
             </Button>
           </Box>
         )}
 
         <Divider sx={{ my: 3 }}>OR</Divider>
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+        <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <GoogleLogin
               onSuccess={handleGoogleSuccess}
               onError={handleGoogleError}
-              useOneTap
-              theme="filled_blue"
-              size="large"
-              text="signin_with"
-              shape="rectangular"
               width="100%"
+              size="large"
+              shape="rectangular"
             />
-          </GoogleOAuthProvider>
-          
-          <Typography variant="body2" textAlign="center" sx={{ mt: 2 }}>
-            Don't have an account?{' '}
-            <Link to="/signup" style={{ textDecoration: 'none', fontWeight: 'bold' }}>
-              Sign up
-            </Link>
-          </Typography>
-        </Box>
+          </Box>
+        </GoogleOAuthProvider>
       </Paper>
+
+      <Snackbar
+        open={uiState.snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setUiState(prev => ({
+          ...prev,
+          snackbar: { ...prev.snackbar, open: false }
+        }))}
+      >
+        <Alert 
+          severity={uiState.snackbar.severity} 
+          sx={{ width: '100%' }}
+        >
+          {uiState.snackbar.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
