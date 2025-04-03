@@ -1,9 +1,8 @@
-import { Button, Container, Grid, Paper, TextField, Divider, Typography, Box } from '@mui/material';
+import { Button, Container, Paper, TextField, Divider, Typography, Box, MenuItem } from '@mui/material';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GoogleLogin } from '@react-oauth/google';
-import CountryCodeSelector from './CountryCodeSelector';
 
 const Login = () => {
   const [mobileNumber, setMobileNumber] = useState('');
@@ -16,43 +15,36 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Mobile number validation
-  const validateMobileNumber = (number) => {
-    const mobileRegex = /^\d{8,15}$/; // Adjust based on your requirements
-    return mobileRegex.test(number);
-  };
+  // Mobile number validation (8-15 digits)
+  const validateMobileNumber = (number) => /^\d{8,15}$/.test(number);
 
   const handleMobileChange = (e) => {
-    const value = e.target.value.replace(/\D/g, ''); // Remove non-digit characters
+    const value = e.target.value.replace(/\D/g, '');
     setMobileNumber(value);
-    setMobileError(!validateMobileNumber(value) ? 'Please enter a valid mobile number' : '');
-  };
-
-  const handleCountryCodeChange = (code) => {
-    setCountryCode(code);
+    setMobileError(!validateMobileNumber(value) ? 'Enter 8-15 digit number' : '');
   };
 
   const handleOtpChange = (e) => {
-    const value = e.target.value.replace(/\D/g, ''); // Remove non-digit characters
+    const value = e.target.value.replace(/\D/g, '');
     setOtp(value);
     setOtpError(value.length !== 6 ? 'OTP must be 6 digits' : '');
   };
 
   const sendOtp = async () => {
-    if (!mobileNumber || mobileError) {
-      setLoginError('Please enter a valid mobile number');
+    if (!validateMobileNumber(mobileNumber)) {
+      setMobileError('Invalid mobile number');
       return;
     }
 
     setIsLoading(true);
     try {
       await axios.post('http://localhost:8080/api/users/send-otp', {
-        phoneNumber: `${countryCode}${mobileNumber}` // Ensure the mobile number is sent correctly
+        phoneNumber: `${countryCode}${mobileNumber}`
       });
       setShowOtpField(true);
       setLoginError('');
-    } catch {
-      setLoginError('Failed to send OTP. Please try again.');
+    } catch (err) {
+      setLoginError(err.response?.data?.message || 'Failed to send OTP');
     } finally {
       setIsLoading(false);
     }
@@ -60,38 +52,24 @@ const Login = () => {
 
   const verifyOtp = async (e) => {
     e.preventDefault();
-    
-    if (!otp || otpError) {
-      setLoginError('Please enter a valid OTP');
+    if (otp.length !== 6) {
+      setOtpError('Invalid OTP');
       return;
     }
 
     setIsLoading(true);
     try {
-      const response = await axios.post('http://localhost:8080/api/users/verify-otp', {
+      const { data } = await axios.post('http://localhost:8080/api/users/verify-otp', {
         mobile: `${countryCode}${mobileNumber}`,
         otp
       });
+
+      localStorage.setItem('token', data.token);
+      const { role } = JSON.parse(atob(data.token.split('.')[1]));
       
-      const token = response.data.token;
-      localStorage.setItem('token', token);
-
-      // Decode role from token and redirect
-      const decodedToken = JSON.parse(atob(token.split('.')[1]));
-      const userRole = decodedToken.role;
-
-      switch (userRole) {
-        case 'Admin':
-          navigate('/admin');
-          break;
-        case 'Customer':
-          navigate('/customer');
-          break;
-        default:
-          navigate('/unauthorized');
-      }
-    } catch (error) {
-      setLoginError(error.response?.data?.message || 'Invalid OTP. Please try again.');
+      navigate(role === 'Admin' ? '/admin' : '/customer');
+    } catch (err) {
+      setLoginError(err.response?.data?.message || 'OTP verification failed');
     } finally {
       setIsLoading(false);
     }
@@ -99,81 +77,79 @@ const Login = () => {
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      const response = await axios.post('http://localhost:8080/api/users/google-auth', {
+      const { data } = await axios.post('http://localhost:8080/api/users/google-auth', {
         credential: credentialResponse.credential
       });
-      
-      localStorage.setItem('token', response.data.token);
-      navigate('/'); // Or based on user role
-    } catch {
-      setLoginError('Google authentication failed. Please try again.');
+      localStorage.setItem('token', data.token);
+      navigate('/');
+    } catch (err) {
+      setLoginError(err.response?.data?.message || 'Google login failed');
     }
   };
 
   return (
     <Container maxWidth="xs">
-      <Paper className='paper mt-5 mb-5' elevation={3} style={{ padding: '20px' }}>
-        <img src='/src/assets/logo.jpeg' alt='logo' style={{ display: 'block', width: '50px', margin: '10px auto' }} />
-        <h2 className='text-center fw-bold'></h2>
-        
+      <Paper elevation={3} sx={{ p: 3, mt: 5, mb: 5 }}>
+        <img 
+          src="/src/assets/logo.jpeg" 
+          alt="logo" 
+          style={{ display: 'block', width: 50, margin: '10px auto' }} 
+        />
+
         {!showOtpField ? (
-          <div>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, marginBottom: 2 }}>
-              <CountryCodeSelector 
-                value={countryCode}
-                onChange={handleCountryCodeChange}
-              />
+          <Box>
+            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
               <TextField
-                label='Mobile Number'
-                variant='outlined'
-                fullWidth
+                select
+                value={countryCode}
+                onChange={(e) => setCountryCode(e.target.value)}
+                sx={{ width: 100 }}
+              >
+                <MenuItem value="+1">+1 (US)</MenuItem>
+                <MenuItem value="+91">+91 (IN)</MenuItem>
+                <MenuItem value="+44">+44 (UK)</MenuItem>
+              </TextField>
+              <TextField
+                label="Mobile Number"
                 value={mobileNumber}
                 onChange={handleMobileChange}
-                error={Boolean(mobileError)}
+                error={!!mobileError}
                 helperText={mobileError}
-                margin='normal'
+                fullWidth
               />
             </Box>
-            
-            {loginError && (
-              <Typography color="error" style={{ marginTop: '10px' }}>{loginError}</Typography>
-            )}
+
+            {loginError && <Typography color="error">{loginError}</Typography>}
 
             <Button
-              variant='contained'
-              color='primary'
               fullWidth
+              variant="contained"
               onClick={sendOtp}
-              disabled={isLoading || !mobileNumber || Boolean(mobileError)}
-              style={{ marginTop: '10px' }}
+              disabled={isLoading || !mobileNumber || !!mobileError}
+              sx={{ mt: 2 }}
             >
               {isLoading ? 'Sending...' : 'Send OTP'}
             </Button>
-          </div>
+          </Box>
         ) : (
           <form onSubmit={verifyOtp}>
             <TextField
-              label='Enter OTP'
-              variant='outlined'
-              fullWidth
+              label="Enter OTP"
               value={otp}
               onChange={handleOtpChange}
-              error={Boolean(otpError)}
+              error={!!otpError}
               helperText={otpError}
-              margin='normal'
+              fullWidth
+              sx={{ mb: 2 }}
             />
-            
-            {loginError && (
-              <Typography color="error" style={{ marginTop: '10px' }}>{loginError}</Typography>
-            )}
+
+            {loginError && <Typography color="error">{loginError}</Typography>}
 
             <Button
-              variant='contained'
-              color='primary'
-              type='submit'
               fullWidth
-              disabled={isLoading || !otp || Boolean(otpError)}
-              style={{ marginTop: '10px' }}
+              type="submit"
+              variant="contained"
+              disabled={isLoading || !otp || !!otpError}
             >
               {isLoading ? 'Verifying...' : 'Verify OTP'}
             </Button>
@@ -182,13 +158,11 @@ const Login = () => {
 
         <Divider sx={{ my: 3 }}>OR</Divider>
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={() => setLoginError('Google login failed')}
-            width="100%"
-          />
-        </Box>
+        <GoogleLogin
+          onSuccess={handleGoogleSuccess}
+          onError={() => setLoginError('Google login failed')}
+          width="100%"
+        />
       </Paper>
     </Container>
   );
