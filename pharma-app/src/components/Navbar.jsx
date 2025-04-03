@@ -228,7 +228,7 @@ const Navbars = () => {
       )}
 
       {/* Main Navbar */}
-      <Navbar expand="lg" className="navbar navhead d-none d-lg-flex" style={{ backgroundColor: '#f8f9fa' }}>
+      <Navbar expand="lg" className="navbar navhead d-none d-lg-flex" style={{ backgroundColor: '#cffae0' }}>
         <Container>
           <Navbar.Brand className="navhome fs-4" as={Link} to="/" style={{ 
             color: '#2a6496',
@@ -245,14 +245,10 @@ const Navbars = () => {
               <>
                 <Link to="/login">
                   <Button variant="outline-primary" className="me-3" style={{ borderRadius: '20px' }}>
-                    Login
+                    Login / Signup
                   </Button>
                 </Link>
-                <Link to="/signup">
-                  <Button variant="primary" className="me-3" style={{ borderRadius: '20px' }}>
-                    Sign Up
-                  </Button>
-                </Link>
+               
               </>
             ) : (
               <>
@@ -293,7 +289,7 @@ const Navbars = () => {
       </Navbar>
 
       {/* Mobile Navbar */}
-      <Navbar expand="lg" className="navbar navhead d-lg-none" style={{ backgroundColor: '#4CAF50' }}>
+      <Navbar expand="lg" className="navbar navhead d-lg-none" style={{ backgroundColor: '#cffae0' }}>
         <Container>
           <Navbar.Brand as={Link} to="/" className="text-white" style={{ fontFamily: '"Arial Rounded MT Bold", sans-serif' }}>
             <span style={{ fontWeight: 'bold' }}>MediMart</span>
@@ -331,7 +327,7 @@ const Navbars = () => {
 
       <hr className="hr" />
 
-      <Nav className="justify-content-center navbar navitem d-none d-lg-flex" style={{ backgroundColor: '#f8f9fa' }}>
+      <Nav className="justify-content-center navbar navitem d-none d-lg-flex" style={{ backgroundColor: '#cffae0' }}>
         <Nav.Item>
           <Nav.Link 
             as={Link} 
@@ -463,19 +459,10 @@ const Navbars = () => {
                     onClick={() => setShowMenu(false)}
                     style={{ borderRadius: '25px' }}
                   >
-                    Login
+                    Login / Signup
                   </Button>
                 </Link>
-                <Link to="/signup">
-                  <Button 
-                    variant="light" 
-                    className="w-100 mb-3 py-2"
-                    onClick={() => setShowMenu(false)}
-                    style={{ borderRadius: '25px', color: '#4CAF50', fontWeight: 'bold' }}
-                  >
-                    Sign Up
-                  </Button>
-                </Link>
+              
               </>
             ) : (
               <>
