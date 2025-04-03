@@ -8,6 +8,8 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import { Button, Badge, Card } from "react-bootstrap";
 import productsData from "../components/Product/ProductData";
 import { FiStar } from "react-icons/fi";
+import LimitedOffer from "./LimitedOffer";
+import ProductCarousel from "../components/Product/ProductCarousel";
 
 const Home = () => {
   const [counter, setCounter] = useState(0);
@@ -147,14 +149,15 @@ const Home = () => {
     : products;
 
   // Scroll functions for popular items
-  function handleScroll() {
+  const handleScroll = () => {
     const container = document.getElementById("popular-items-container");
-    if (container.scrollLeft > 0) {
-      setShowLeftButton(true); 
-    } else {
-      setShowLeftButton(false); 
+    if (container) {
+      const { scrollLeft, scrollWidth, clientWidth } = container;
+      setShowLeftButton(scrollLeft > 0);
+      setShowRightButton(scrollLeft < scrollWidth - clientWidth);
     }
-  }
+  }; 
+
   
   function smoothScroll(direction) {
     const container = document.getElementById("popular-items-container");
@@ -517,16 +520,7 @@ const Home = () => {
 
       {/* Offer Section */}
       <div style={{ backgroundColor: 'hsl(198, 76%, 95%)', padding: '10px' }}>
-        <div className="offer-section row">
-          <div className="content-box"></div>
-          <div className="content col-sm-1">
-            <h4>Limited Time Offer</h4>
-            <h3>Grab It Before It Sold</h3>
-            <p className="text-dark">Manage your health with ease....</p>
-            <h4>Buy MediMart Medicines At 20% Discount, Use Code OFF20</h4>
-            <Link to={'/productlist'}><button className="btn btn-primary">SHOP NOW</button></Link>
-          </div>
-        </div>
+        <LimitedOffer/>
       </div>
 
       {/* Categories */}
@@ -639,105 +633,7 @@ const Home = () => {
 
       {/* Popular Items */}
       <div style={{ backgroundColor: 'hsl(198, 76%, 95%)', padding: '20px' }}>
-        <div className="producthead">
-          <h2>Popular Items</h2>
-          <hr />
-        </div>
-
-        <div className="position-relative">
-          {showLeftButton && (
-            <button 
-              className="scroll-btn left-btn position-absolute start-0 top-50 translate-middle-y z-1" 
-              onClick={() => smoothScroll(-1)}
-              style={{ left: '-20px' }}
-            >
-              &lt;
-            </button>
-          )}
-          <div 
-            className="scroll-content d-flex overflow-auto py-3" 
-            id="popular-items-container" 
-            onScroll={handleScroll}
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            {randomPopular.map((product) => (
-              <div key={product.id} className="flex-shrink-0 me-4" style={{ width: '250px' }}>
-                <Card className="h-100">
-                  <div className="product-badge">
-                    {product.discount > 0 && (
-                      <Badge bg="danger" className="position-absolute top-0 start-0 m-2">
-                        -{product.discount}% OFF
-                      </Badge>
-                    )}
-                    {product.stock < 10 && product.stock > 0 && (
-                      <Badge bg="warning" className="position-absolute top-0 end-0 m-2">
-                        Low Stock
-                      </Badge>
-                    )}
-                    {product.stock === 0 && (
-                      <Badge bg="secondary" className="position-absolute top-0 end-0 m-2">
-                        Out of Stock
-                      </Badge>
-                    )}
-                  </div>
-                  <Link to={`/productdetail/${product.id}`}>
-                    <Card.Img
-                      variant="top"
-                      src={product.image}
-                      alt={product.name}
-                      style={{ 
-                        height: '180px', 
-                        objectFit: 'contain', 
-                        padding: '1rem',
-                        backgroundColor: '#f8f9fa'
-                      }}
-                    />
-                  </Link>
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title className="h6">{product.name}</Card.Title>
-                    <small className="text-muted mb-1">{product.category}</small>
-                    <StarRating rating={product.rating} />
-                    <div className="mt-auto">
-                      {product.discount > 0 ? (
-                        <>
-                          <h6 className="text-primary mb-1">
-                            ₹{(product.price * (1 - product.discount / 100)).toFixed(2)}
-                          </h6>
-                          <div className="d-flex align-items-center">
-                            <del className="text-muted small me-2">₹{product.price.toFixed(2)}</del>
-                            <span className="text-danger small">
-                              {product.discount}% OFF
-                            </span>
-                          </div>
-                        </>
-                      ) : (
-                        <h6 className="text-primary">₹{product.price.toFixed(2)}</h6>
-                      )}
-                      <div className="mt-2 pt-2">
-                        <Button 
-                          variant="primary" 
-                          size="sm" 
-                          className="w-100"
-                          as={Link}
-                          to={`/productdetail/${product.id}`}
-                        >
-                          View Details
-                        </Button>
-                      </div>
-                    </div>
-                  </Card.Body>
-                </Card>
-              </div>
-            ))}
-          </div>
-          <button 
-            className="scroll-btn right-btn position-absolute end-0 top-50 translate-middle-y z-1" 
-            onClick={() => smoothScroll(1)}
-            style={{ right: '-20px' }}
-          >
-            &gt;
-          </button>
-        </div>
+      <ProductCarousel products={products} />
       </div>
 
       {/* Testimonials */}

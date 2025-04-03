@@ -19,21 +19,18 @@ import ScrollToTop from './components/Product/ScrollToTop.jsx';
 
 function App() {
   const [cartItems, setCartItems] = useState(() => {
-
     const savedCart = localStorage.getItem('cart');
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  const addToCart = (product, quantity) => {
+  const addToCart = (product, quantity = 1) => {
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((item) => item.id === product.id);
       if (existingItem) {
-       
         return prevItems.map((item) =>
           item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
         );
       }
-      
       return [...prevItems, { ...product, quantity }];
     });
   };
@@ -49,15 +46,24 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
-      <Navbars />
+      <Navbars cartItems={cartItems} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/productlist" element={<ProductList />} />
-        <Route path="/productdetail/:id" element={<ProductDetail addToCart={addToCart} />} />
+        <Route 
+          path="/productlist" 
+          element={<ProductList addToCart={addToCart} />} 
+        />
+        <Route 
+          path="/productdetail/:id" 
+          element={<ProductDetail addToCart={addToCart} />} 
+        />
         <Route path="/search" element={<Search />} />
-        <Route path="/cart" element={<Cart cartItems={cartItems} removeFromCart={removeFromCart} />} />
+        <Route 
+          path="/cart" 
+          element={<Cart cartItems={cartItems} removeFromCart={removeFromCart} />} 
+        />
         <Route path="/checkout" element={<Checkout cartItems={cartItems} />} />
         <Route path="/orders" element={<OrderHistory />} />
         <Route path="/profile" element={<Profile />} />
