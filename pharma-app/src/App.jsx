@@ -16,6 +16,8 @@ import Footer from "./components/Footer";
 import Search from './pages/Search';
 import Upload from './pages/Upload';
 import ScrollToTop from './components/Product/ScrollToTop.jsx'; 
+import Healthcare from './components/Product/Healthcare.jsx';
+import SpecialOffer from './components/Product/SpecialOffer.jsx';
 
 function App() {
   const [cartItems, setCartItems] = useState(() => {
@@ -54,6 +56,14 @@ function App() {
         <Route 
           path="/productlist" 
           element={<ProductList addToCart={addToCart} />} 
+        />
+         <Route 
+          path="/healthcare" 
+          element={<Healthcare addToCart={addToCart} />} 
+        />
+           <Route 
+          path="/offer" 
+          element={<SpecialOffer addToCart={addToCart} />} 
         />
         <Route 
           path="/productdetail/:id" 

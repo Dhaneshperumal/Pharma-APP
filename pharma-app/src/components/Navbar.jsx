@@ -119,6 +119,7 @@ const Navbars = () => {
               color: '#2a6496',
               fontFamily: '"Arial Rounded MT Bold", sans-serif'
             }}>
+            <img src="src/assets/logo.jpeg" alt="#" style={{width:'40px'}} />
               <span style={{ color: '#4CAF50' }}>Medi</span>
               <span style={{ color: '#2196F3' }}>Mart</span>
             </Navbar.Brand>
