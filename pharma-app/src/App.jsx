@@ -62,7 +62,7 @@ function App() {
           element={<Healthcare addToCart={addToCart} />} 
         />
            <Route 
-          path="/offer" 
+          path="/offers" 
           element={<SpecialOffer addToCart={addToCart} />} 
         />
         <Route 
