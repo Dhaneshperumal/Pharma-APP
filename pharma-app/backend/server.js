@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import cors from 'cors';
@@ -13,9 +14,15 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 // Configuration
-const GOOGLE_CLIENT_ID = '448185632803-o10moscguqnt788vorlr5e3o68gqq2vb.apps.googleusercontent.com'
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+if (!GOOGLE_CLIENT_ID) {
+  throw new Error('GOOGLE_CLIENT_ID environment variable is required');
+}
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your_secure_jwt_secret';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -238,7 +245,7 @@ app.post('/api/auth/google', async (req, res) => {
 });
 
 // Error handling middleware
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   console.error('Server error:', err);
   res.status(500).json({
     success: false,
