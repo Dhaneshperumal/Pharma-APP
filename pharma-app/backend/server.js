@@ -2,11 +2,15 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import cors from 'cors';
 import { OAuth2Client } from 'google-auth-library';
+import { config } from 'dotenv';
+import process from 'process';
+config();
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 const PORT = 8080;
-const GOOGLE_CLIENT_ID = (typeof process !== 'undefined' && process.env.GOOGLE_CLIENT_ID) || '448185632803-o10moscguqnt788vorlr5e3o68gqq2vb.apps.googleusercontent.com';
-
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 // Middleware
 app.use(cors({
   origin: 'http://localhost:5173',
