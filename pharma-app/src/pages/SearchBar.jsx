@@ -13,6 +13,7 @@ const SearchBar = ({ onSearch }) => {
 
     // Fetch suggestions based on the query
     if (query) {
+      // Replace this with your actual API call or logic to get suggestions
       const fetchedSuggestions = ['Ibuprofen', 'Paracetamol', 'Aspirin', 'Amoxicillin', 'Ciprofloxacin'].filter(item =>
         item.toLowerCase().includes(query.toLowerCase())
       );
@@ -24,14 +25,14 @@ const SearchBar = ({ onSearch }) => {
 
   const handleSuggestionClick = (suggestion) => {
     setSearchQuery(suggestion);
-    setSuggestions([]);
-    onSearch(suggestion); 
+    setSuggestions([]); // Clear suggestions after selection
+    onSearch(suggestion); // Call the search function with the selected suggestion
   };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      onSearch(searchQuery); 
+      onSearch(searchQuery); // Call the search function with the current query
     }
   };
 

@@ -13,7 +13,7 @@ body {
     justify-content: center;
     align-items: center;
 }
-.search-input{
+.search input{
     width: 40%;
     padding: 10px 20px;
     border-radius: 20px;
@@ -99,11 +99,6 @@ body {
         transform: translate(33%,0%);
         
     }
-    .search input{
-        width: 150px;
-        font-size: medium;
-        margin-top: 15px;
-    }
    
     .place{
         margin-top: 50px;
@@ -139,7 +134,7 @@ body {
 .slide img {
     width: 100%;
     height: 100%; 
-   
+    object-fit: cover; 
 }
 
 .navigation-manual {
@@ -266,7 +261,7 @@ body {
 .productss {
     display: flex;
     flex-wrap: wrap; 
-    
+    justify-content: center; 
     margin: 25px; 
     margin-bottom: 50px;
 }
@@ -279,7 +274,7 @@ body {
     margin: 15px; 
     padding: 20px; 
     width: 320px; 
-    /* text-align: center;  */
+    text-align: center; 
     transition: transform 0.2s; 
 }
 
@@ -305,7 +300,6 @@ body {
 
 .product button {
     background-color: #222324; 
-    width: 100%;
     color: white;
     border: none; 
     border-radius: 5px;
@@ -363,20 +357,20 @@ body {
     width: 40%;
     border-radius: 8px;
     z-index: 2;
-    backdrop-filter: blur(8px); 
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #333; 
+    backdrop-filter: blur(8px); /* Glass effect */
+    background-color: rgba(255, 255, 255, 0.2); /* Adds semi-transparent background */
+    color: #333; /* Darker text for better contrast */
     text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional shadow for more emphasis */
 }
 
 /* Make Heading Colors More Distinct */
 .content h3 {
-    color: #000; 
+    color: #000; /* Strong black color for better readability */
 }
 
 .content h4 {
-    color: hsl(143, 85%, 75%); 
+    color: hsl(143, 85%, 75%); /* Accent color for headings */
 }
 
 /* Button Styling */
@@ -384,8 +378,8 @@ body {
     margin-top: 20px;
     padding: 12px 24px;
     border: none;
-    background: #007bff; 
-    color: #fff; 
+    background: #007bff; /* Blue background for good contrast */
+    color: #fff; /* White text for readability */
     font-size: 16px;
     cursor: pointer;
     font-weight: bold;
@@ -394,7 +388,7 @@ body {
 }
 
 .content button:hover {
-    background: #0056b3; 
+    background: #0056b3; /* Darker blue for hover effect */
 }
 
 
@@ -434,7 +428,7 @@ body {
   /* Responsive styles */
   @media (max-width: 768px) {
     .popular {
-      min-width: 200px; 
+      min-width: 200px; /* Adjust minimum width for mobile */
     }
   }
 
@@ -443,19 +437,18 @@ body {
 
 /* catagory  */
 
-.card img {
-    object-fit: cover;
+.card{
+    width: 320px;
 }
 
 .catbtn button{
-    background-color: #bbd7ff;
+    background-color: #616161;
     border: none;
     border-radius: 10px;
-    color: #000;
 }
 .catbtn button:hover{
     border: 1px solid #121212;
-    background-color: #c6e3fa;
+    background-color: #616161;
 }
 /* catagory */
 
@@ -468,7 +461,7 @@ body {
     position: relative;
     width: 100%;
     overflow: hidden;
-    padding: 0 30px; 
+    padding: 0 30px; /* Add space on the sides */
   }
   
   .scroll-content {
@@ -516,11 +509,11 @@ body {
   }
   
   .left-btn {
-    left: 20px; 
+    left: 20px; /* Space from the left edge */
   }
   
   .right-btn {
-    right: 20px; 
+    right: 20px; /* Space from the right edge */
   }
   
   /* testimonials */
@@ -529,6 +522,7 @@ body {
     text-align: center;
     margin: 50px 0;
     padding: 20px;
+    background-color: #f9f9f9;
   }
   
   .testimonials-section h2 {
@@ -558,19 +552,19 @@ body {
     display: flex;
     overflow-x: auto;
     scroll-behavior: smooth;
-    gap: 40px; 
+    gap: 40px; /* Space between testimonials */
     width: 100%;
     padding: 20px 0;
   }
   
 .testimonial {
   text-align: left;
-  font-size: 1.2em; 
+  font-size: 1.2em; /* Bigger font for better readability */
   line-height: 1.6;
   color: #333;
   flex-shrink: 0;
-  width: 400px; 
-  margin: 0 20px; 
+  width: 400px; /* Reduced from 500px to make it more compact */
+  margin: 0 20px; /* Added spacing to the left and right */
 }
 
 .testimonial-highlight {
@@ -582,7 +576,7 @@ body {
 
 .testimonial-message {
   font-size: 1.1em;
-  color: #595959; 
+  color: #595959; /* Dimmer version of the highlight color */
   margin-bottom: 15px;
 }
 
@@ -590,7 +584,7 @@ body {
   text-align: right;
   font-weight: bold;
   font-size: 1em;
-  color: #787878;
+  color: #787878; /* Slightly dimmer shade */
 }
 
   
@@ -629,16 +623,17 @@ body {
 
   .offer-section {
     display: flex;
-    align-items: center;
-    justify-content: center; 
+    align-items: center; /* Aligns items vertically */
+    justify-content: center; /* Center the content */
     padding: 20px;
-    border-radius: 10px; 
-    margin: 20px 0; 
+    background-color: #f8fff5; /* Light background for the offer section */
+    border-radius: 10px; /* Rounded corners */
+    margin: 20px 0; /* Space above and below */
     height: 600px;
 }
 @media (max-width: 768px) {
     .popular {
-      max-width: 400px; 
+      max-width: 400px; /* Adjust minimum width for mobile */
     }
   }
 
@@ -647,27 +642,27 @@ body {
   .content-box {
     width: 300px;
     height: 300px;
-    background-image: url('https://via.placeholder.com/300');
+    background-image: url('https://via.placeholder.com/300'); /* Replace with your image URL */
     background-size: cover;
     background-position: center;
-    filter: blur(20px); 
-    border-radius: 10px; 
-    position: absolute;
-    z-index: 1;
+    filter: blur(20px); /* Adds the blur effect */
+    border-radius: 10px; /* Smoothens corners */
+    position: absolute; /* Keeps this behind the content */
+    z-index: 1; /* Positions behind text content */
   }
   
   /* Content Overlay */
   .content {
     background-color: #f9fbf9;
-    position: relative;
+    position: relative; /* Ensures this is layered above the blur */
     padding: 40px;
-    justify-content: center; 
-     align-items: center;   
+    justify-content: center; /* Center vertical alignment */
+     align-items: center;    /* Center horizontal alignment */
     width: 50%;
     height: 400px;
     border-radius: 8px;
-    z-index: 2; 
-    backdrop-filter: blur(8px); 
+    z-index: 2; /* Places it above the blurred box */
+    backdrop-filter: blur(8px); /* Adds frosted glass effect */
     color: white;
     text-align: center;
   }

@@ -13,26 +13,27 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ForgetPassword from "./components/Auth/ForgetPassword";
 import Navbars from "./components/Navbar";
 import Footer from "./components/Footer";
-import Search from './pages/Search';
+import Search from './pages/Search'; // Adjust the path based on your project structure
 import Upload from './pages/Upload';
 import ScrollToTop from './components/Product/ScrollToTop.jsx'; 
-import Healthcare from './components/Product/Healthcare.jsx';
-import SpecialOffer from './components/Product/SpecialOffer.jsx';
 
 function App() {
   const [cartItems, setCartItems] = useState(() => {
+    // Initialize cartItems from local storage
     const savedCart = localStorage.getItem('cart');
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  const addToCart = (product, quantity = 1) => {
+  const addToCart = (product, quantity) => {
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((item) => item.id === product.id);
       if (existingItem) {
+        // Increment quantity if product already exists
         return prevItems.map((item) =>
           item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
         );
       }
+      // Add new product with quantity
       return [...prevItems, { ...product, quantity }];
     });
   };
@@ -42,38 +43,22 @@ function App() {
   };
 
   useEffect(() => {
+    // Update local storage whenever cartItems changes
     localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
   return (
     <Router>
       <ScrollToTop />
-      <Navbars cartItems={cartItems} />
+      <Navbars />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route 
-          path="/productlist" 
-          element={<ProductList addToCart={addToCart} />} 
-        />
-         <Route 
-          path="/healthcare" 
-          element={<Healthcare addToCart={addToCart} />} 
-        />
-           <Route 
-          path="/offers" 
-          element={<SpecialOffer addToCart={addToCart} />} 
-        />
-        <Route 
-          path="/productdetail/:id" 
-          element={<ProductDetail addToCart={addToCart} />} 
-        />
+        <Route path="/productlist" element={<ProductList />} />
+        <Route path="/productdetail/:id" element={<ProductDetail addToCart={addToCart} />} />
         <Route path="/search" element={<Search />} />
-        <Route 
-          path="/cart" 
-          element={<Cart cartItems={cartItems} removeFromCart={removeFromCart} />} 
-        />
+        <Route path="/cart" element={<Cart cartItems={cartItems} removeFromCart={removeFromCart} />} />
         <Route path="/checkout" element={<Checkout cartItems={cartItems} />} />
         <Route path="/orders" element={<OrderHistory />} />
         <Route path="/profile" element={<Profile />} />
